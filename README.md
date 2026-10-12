@@ -12,7 +12,7 @@
 
 ## Kurzbeschreibung
 
-Der Zürich Weather Tracker zeigt, wie sich Temperatur und Niederschlag in Zürich über Tage und Wochen entwickeln. Ein Cronjob ruft jede Stunde die Open-Meteo-API ab. PHP-Skripte bereinigen die Werte (keine Prognosen, keine Duplikate, unmögliche Werte werden null) und speichern sie in einer MariaDB-Datenbank. Ein eigener JSON-Endpunkt liefert die Daten an die Website, die sie mit Chart.js als Temperaturkurve und Regenbalken darstellt. Ein Methoden-Teil zeigt live, wie viele Stunden gesammelt und bereinigt wurden.
+Der Zürich Weather Tracker zeigt, wie sich Temperatur und Niederschlag in Zürich entwickeln – etwa, dass es seit Ende Juli um 13 Grad kühler geworden ist. Ein Cronjob ruft jede Stunde die Open-Meteo-API ab. PHP-Skripte bereinigen die Werte (keine Prognosen, keine Duplikate, unmögliche Werte werden null) und speichern sie in MariaDB. Ein JSON-Endpunkt liefert sie an die Website: drei automatisch berechnete Befunde, Chart.js-Diagramme und ein Methoden-Teil mit dem Audit.
 
 ## Screenshots
 
@@ -100,6 +100,14 @@ Für die Messwerte reicht eine Tabelle, weil nur ein Ort gemessen wird und sich 
 
 Lokal ohne Datenbank zeigen: `php -S localhost:8000` im Projektordner starten. Der Endpunkt antwortet dann mit Fehler, und die Seite lädt automatisch `data/fallback.json`.
 
+## Was die Daten zeigen (Stand 13.10.2026)
+
+Die Befunde werden in `script.js` (`renderStory`) aus allen vollständigen Tagen berechnet und aktualisieren sich automatisch.
+
+- **Abkühlung:** Die erste Woche (29.07.–04.08.) hatte ein Tagesmittel von 26.8 °C, die letzte (06.10.–12.10.) noch 13.8 °C. Zürich ist also 13 Grad kühler geworden.
+- **Spannweite:** Der Höchstwert war 36.8 °C (03.08.), der Tiefstwert 6.2 °C (12.10.).
+- **Regen in Schüben:** 42 % des gesamten Regens (128.2 mm) fiel an nur drei Tagen. Die längste Trockenphase dauerte 14 Tage (17.09.–30.09.).
+
 ## Was die Daten nicht sagen
 
 Die Werte sind stündliche Modelldaten von Open-Meteo für einen Punkt in Zürich, keine Messung einer einzelnen Wetterstation. Prognosen werden bewusst nicht gespeichert. Beim ersten Auffüllen mit `past_days=92` liefert die API für die ältesten rund drei Wochen nur `null` – diese Stunden verwirft der Transform und zählt sie im Audit.
@@ -115,6 +123,8 @@ Die Werte sind stündliche Modelldaten von Open-Meteo für einen Punkt in Züric
 ## Ressourcen
 
 - Kursunterlagen IM3 (Folien A–F)
+- MeteoSchweiz, Klimabulletin Sommer 2026 (Kontext im Einleitungstext): https://www.meteoschweiz.admin.ch/service-und-publikationen/publikationen/berichte-und-bulletins/2026/klimabulletin-sommer-2026.html
+- Tsüri.ch, «Zürich und die Schweiz erlebten den heissesten Sommer seit Messbeginn»: https://tsri.ch/a/zuerich-und-die-schweiz-erlebten-den-heissesten-sommer-seit-messbeginn
 - Open-Meteo Dokumentation: https://open-meteo.com/en/docs
 - Chart.js: https://www.chartjs.org/docs/
 - crontab.guru

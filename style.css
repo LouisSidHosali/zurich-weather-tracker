@@ -32,10 +32,10 @@ main {
     color: var(--muted);
 }
 
-h1 { margin: 4px 0 8px; font-size: 2.2rem; }
+h1 { margin: 4px 0 8px; font-size: 2.2rem; line-height: 1.2; }
 h2 { margin: 0; font-size: 1.15rem; }
 
-.lead { margin: 0 0 24px; color: var(--muted); max-width: 60ch; }
+.lead { margin: 0 0 24px; color: var(--muted); max-width: 65ch; font-size: 1.05rem; }
 
 /* Kennzahlen */
 .kpis {
@@ -120,3 +120,37 @@ code {
     padding: 1px 5px;
     border-radius: 4px;
 }
+
+/* Befunde */
+.story { margin-bottom: 28px; }
+
+.story-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.finding {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.finding:last-child { border-left-color: var(--rain); }
+
+.finding-label { font-size: 0.85rem; color: var(--muted); }
+.finding-value { font-size: 1.6rem; font-weight: 700; }
+.finding p { margin: 4px 0 0; font-size: 0.95rem; }
+
+.section-title { margin-bottom: 10px; }
+
+/* Einleitung */
+.intro { max-width: 65ch; margin-bottom: 28px; }
+.intro p { margin: 6px 0 0; }
+.intro .source { font-size: 0.8rem; color: var(--muted); }
+.intro .source a { color: inherit; }

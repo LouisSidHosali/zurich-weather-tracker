@@ -158,6 +158,45 @@ function render() {
     rainChart.update();
 
     renderKpis();
+    renderChartTitles();
+}
+
+// Diagrammtitel als Befund für den gewählten Zeitraum
+function renderChartTitles() {
+    const fullDays = daily.filter((row) => row.hours >= 20);
+    if (fullDays.length >= 2) {
+        const first = fullDays[0];
+        const last = fullDays[fullDays.length - 1];
+        const diff = last.temp_avg_c - first.temp_avg_c;
+        if (Math.abs(diff) >= 2) {
+            setText('title-temperature',
+                `Seit dem ${shortDate(first.date)} ${formatNumber(Math.abs(diff), 'Grad')} ${diff < 0 ? 'kühler' : 'wärmer'}.`);
+        } else {
+            const swing = Math.max(...fullDays.map((row) => row.temp_max_c - row.temp_min_c));
+            setText('title-temperature', `Tag und Nacht liegen bis zu ${formatNumber(swing, 'Grad')} auseinander.`);
+        }
+        setText('hint-temperature',
+            `Tagesmittel ${formatDay(first.date)}: ${formatNumber(first.temp_avg_c, '°C')}, ` +
+            `${formatDay(last.date)}: ${formatNumber(last.temp_avg_c, '°C')} · stündliche Werte in °C`);
+    } else {
+        setText('title-temperature', 'Temperatur');
+        setText('hint-temperature', 'Stündliche Werte in °C');
+    }
+
+    const total = daily.reduce((sum, row) => sum + (row.precipitation_mm ?? 0), 0);
+    const rainyDays = daily.filter((row) => (row.precipitation_mm ?? 0) >= 1).length;
+    if (daily.length === 0) {
+        setText('title-rain', 'Niederschlag pro Tag');
+        setText('hint-rain', 'Summe in Millimetern');
+    } else if (rainyDays === 0) {
+        setText('title-rain', total > 0 ? 'Nur ein paar Tropfen.' : 'Kein Regen in diesem Zeitraum.');
+        setText('hint-rain', 'Summe pro Tag in Millimetern');
+    } else {
+        const wettest = daily.reduce((a, b) => ((b.precipitation_mm ?? 0) > (a.precipitation_mm ?? 0) ? b : a));
+        setText('title-rain', `An ${rainyDays} von ${daily.length} Tagen hat es geregnet.`);
+        setText('hint-rain',
+            `Am meisten am ${formatDay(wettest.date)} (${formatNumber(wettest.precipitation_mm, 'mm')}) · Summe pro Tag in Millimetern`);
+    }
 }
 
 function setText(id, value) {
@@ -212,6 +251,99 @@ function setStatus(text, isError = false) {
     el.classList.toggle('error', isError);
 }
 
+// ---------- Befunde (über alle gesammelten Tage) ----------
+
+const MONATE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli',
+    'August', 'September', 'Oktober', 'November', 'Dezember'];
+
+function average(values) {
+    return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function shortDate(text) {
+    const d = new Date(text + 'T12:00');
+    return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.`;
+}
+
+// "2026-07-29" → "Ende Juli"
+function periodOfMonth(text) {
+    const d = new Date(text + 'T12:00');
+    const part = d.getDate() <= 10 ? 'Anfang' : d.getDate() <= 20 ? 'Mitte' : 'Ende';
+    return `${part} ${MONATE[d.getMonth()]}`;
+}
+
+async function loadStory() {
+    let allDays;
+    try {
+        allDays = await loadJson(`${ENDPUNKT}?view=daily&days=365`);
+    } catch (error) {
+        allDays = (await loadJson(FALLBACK)).daily;
+    }
+    // nur vollständige Tage, sonst verzerrt der laufende Tag die Werte
+    renderStory(allDays.filter((row) => row.hours >= 20));
+}
+
+function renderStory(rows) {
+    if (rows.length < 14) {
+        return;
+    }
+
+    // Abkühlung: erste gegen letzte Woche
+    const firstWeek = rows.slice(0, 7);
+    const lastWeek = rows.slice(-7);
+    const before = average(firstWeek.map((row) => row.temp_avg_c));
+    const after = average(lastWeek.map((row) => row.temp_avg_c));
+    const diff = before - after;
+    const start = periodOfMonth(rows[0].date);
+
+    if (diff >= 1) {
+        setText('headline', `Zürich ist seit ${start} um ${formatNumber(diff, 'Grad')} kühler geworden`);
+    } else if (diff <= -1) {
+        setText('headline', `Zürich ist seit ${start} um ${formatNumber(-diff, 'Grad')} wärmer geworden`);
+    }
+    setText('lead',
+        `In der ersten Woche (${shortDate(firstWeek[0].date)}–${shortDate(firstWeek[6].date)}) lag die Tagesmitteltemperatur ` +
+        `bei ${formatNumber(before, '°C')}, in der letzten Woche (${shortDate(lastWeek[0].date)}–${shortDate(lastWeek[6].date)}) ` +
+        `noch bei ${formatNumber(after, '°C')}. In der Datenbank liegen ${rows.length} vollständige Tage, ` +
+        `jede Stunde kommt ein neuer Wert dazu.`);
+
+    setText('f-cooling', `${formatNumber(Math.abs(diff), 'Grad')} ${diff >= 0 ? 'kühler' : 'wärmer'}`);
+    setText('f-cooling-text', `Tagesmittel erste Woche ${formatNumber(before, '°C')}, letzte Woche ${formatNumber(after, '°C')}.`);
+
+    // Spannweite: heissester und kältester Wert
+    const hottest = rows.reduce((a, b) => (b.temp_max_c > a.temp_max_c ? b : a));
+    const coldest = rows.reduce((a, b) => (b.temp_min_c < a.temp_min_c ? b : a));
+    setText('f-range', `${formatNumber(hottest.temp_max_c, '')}→ ${formatNumber(coldest.temp_min_c, '°C')}`);
+    setText('f-range-text',
+        `Höchstwert am ${formatDay(hottest.date)}, Tiefstwert am ${formatDay(coldest.date)}: ` +
+        `${formatNumber(hottest.temp_max_c - coldest.temp_min_c, 'Grad')} Unterschied.`);
+
+    // Regen: Anteil der drei nassesten Tage und längste Trockenphase (< 1 mm)
+    const rain = rows.map((row) => row.precipitation_mm ?? 0);
+    const total = rain.reduce((sum, value) => sum + value, 0);
+    if (total > 0) {
+        const topThree = [...rain].sort((a, b) => b - a).slice(0, 3).reduce((sum, value) => sum + value, 0);
+
+        let longest = { length: 0, from: 0 };
+        let current = 0;
+        rain.forEach((value, i) => {
+            current = value < 1 ? current + 1 : 0;
+            if (current > longest.length) {
+                longest = { length: current, from: i - current + 1 };
+            }
+        });
+        let dryText = '';
+        if (longest.length > 1) {
+            const dryFrom = rows[longest.from].date;
+            const dryTo = rows[longest.from + longest.length - 1].date;
+            dryText = ` Dazwischen blieb es bis zu ${longest.length} Tage trocken (${shortDate(dryFrom)}–${shortDate(dryTo)}).`;
+        }
+
+        setText('f-rain', `${Math.round((topThree / total) * 100)} %`);
+        setText('f-rain-text', `des gesamten Regens (${formatNumber(total, 'mm')}) fiel an nur drei Tagen.${dryText}`);
+    }
+}
+
 // ---------- Bedienung ----------
 
 document.querySelectorAll('.range button').forEach((button) => {
@@ -225,3 +357,4 @@ document.querySelectorAll('.range button').forEach((button) => {
 
 loadData();
 loadStatus();
+loadStory();

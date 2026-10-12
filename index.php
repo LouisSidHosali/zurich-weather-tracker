@@ -10,15 +10,62 @@
 <body>
 <main>
     <header>
-        <p class="eyebrow">IM3 · Data Story</p>
-        <h1>Zürich Weather Tracker</h1>
-        <p class="lead">
+        <p class="eyebrow">Zürich Weather Tracker · Einzelprojekt IM3</p>
+        <h1 id="headline">Wie sich das Wetter in Zürich verändert</h1>
+        <p class="lead" id="lead">
             Wie entwickeln sich Temperatur und Niederschlag in Zürich?
             Jede Stunde holt ein Skript die aktuellen Werte und speichert sie in einer eigenen Datenbank.
         </p>
     </header>
 
-    <!-- Kennzahlen -->
+    <section class="intro" aria-labelledby="intro-title">
+        <h2 id="intro-title">Warum Zürichs Wetter beobachten?</h2>
+        <p>
+            Der Sommer 2026 war in der Schweiz der heisseste seit Messbeginn, begleitet von extremer Trockenheit.
+            In Zürich stieg das Thermometer auf 38,3 Grad, so hoch wie noch nie seit 1864.
+            Wer auf Hitze und Trockenheit reagieren will, muss zuerst wissen, wie sich das Wetter entwickelt.
+        </p>
+        <p>
+            Dieser Tracker beobachtet deshalb Stunde für Stunde Temperatur und Regen in Zürich und fragt:
+            Wie lange bleibt es warm? Wie schnell kühlt es ab? Und fällt genug Regen?
+        </p>
+        <p class="source">
+            Quellen: <a href="https://www.meteoschweiz.admin.ch/service-und-publikationen/publikationen/berichte-und-bulletins/2026/klimabulletin-sommer-2026.html" target="_blank" rel="noopener">MeteoSchweiz, Klimabulletin Sommer 2026</a>,
+            <a href="https://tsri.ch/a/zuerich-und-die-schweiz-erlebten-den-heissesten-sommer-seit-messbeginn" target="_blank" rel="noopener">Tsüri.ch</a>
+        </p>
+    </section>
+
+    <section class="story" aria-labelledby="story-title">
+        <h2 id="story-title">Was die Daten zeigen</h2>
+        <div class="story-grid">
+            <article class="finding">
+                <span class="finding-label">Abkühlung</span>
+                <span class="finding-value" id="f-cooling">–</span>
+                <p id="f-cooling-text">&nbsp;</p>
+            </article>
+            <article class="finding">
+                <span class="finding-label">Spannweite</span>
+                <span class="finding-value" id="f-range">–</span>
+                <p id="f-range-text">&nbsp;</p>
+            </article>
+            <article class="finding">
+                <span class="finding-label">Regen in Schüben</span>
+                <span class="finding-value" id="f-rain">–</span>
+                <p id="f-rain-text">&nbsp;</p>
+            </article>
+        </div>
+    </section>
+
+    <h2 class="section-title">Im Detail</h2>
+
+    <nav class="range" aria-label="Zeitraum">
+        <button data-days="3">3 Tage</button>
+        <button data-days="7" class="active">7 Tage</button>
+        <button data-days="30">30 Tage</button>
+        <button data-days="60">60 Tage</button>
+        <button data-days="365">Alles</button>
+    </nav>
+
     <section class="kpis">
         <div class="kpi">
             <span class="kpi-label">Zuletzt gemessen</span>
@@ -42,24 +89,17 @@
         </div>
     </section>
 
-    <nav class="range" aria-label="Zeitraum">
-        <button data-days="3">3 Tage</button>
-        <button data-days="7" class="active">7 Tage</button>
-        <button data-days="30">30 Tage</button>
-        <button data-days="60">60 Tage</button>
-    </nav>
-
     <p class="status" id="status">Daten werden geladen …</p>
 
     <section class="card">
-        <h2>Temperatur</h2>
-        <p class="hint">Stündliche Werte in °C</p>
+        <h2 id="title-temperature">Temperatur</h2>
+        <p class="hint" id="hint-temperature">Stündliche Werte in °C</p>
         <div class="chart-box"><canvas id="chart-temperature"></canvas></div>
     </section>
 
     <section class="card">
-        <h2>Niederschlag pro Tag</h2>
-        <p class="hint">Summe in Millimetern</p>
+        <h2 id="title-rain">Niederschlag pro Tag</h2>
+        <p class="hint" id="hint-rain">Summe in Millimetern</p>
         <div class="chart-box"><canvas id="chart-rain"></canvas></div>
     </section>
 
