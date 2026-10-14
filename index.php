@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zürich Weather Tracker</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -55,7 +55,44 @@
             </article>
         </div>
     </section>
+    <section class="heat" id="heat" aria-labelledby="heat-title">
+        <h2 id="heat-title">Der Hitzesommer in Zahlen</h2>
+        <p class="hint">Berechnet aus den stündlichen Werten in der Datenbank, seit dem 29. Juli.</p>
 
+        <div class="heat-grid">
+            <article class="heat-card">
+                <span class="heat-value" id="h-days">–</span>
+                <h3>Hitzetage</h3>
+                <p>Tage mit mindestens 30 °C. Der Körper muss ständig kühlen, das belastet Herz und Kreislauf.</p>
+            </article>
+            <article class="heat-card">
+                <span class="heat-value" id="h-nights">–</span>
+                <h3>Tropennächte</h3>
+                <p>Nächte, in denen es nicht unter 20 °C abkühlt. Der Körper erholt sich im Schlaf kaum – besonders gefährlich für ältere Menschen.</p>
+            </article>
+            <article class="heat-card">
+                <span class="heat-value" id="h-waves">–</span>
+                <h3>Hitzewellen</h3>
+                <p id="h-waves-text">Mindestens drei Tage in Folge mit einem Tagesmittel ab 25 °C. Die Belastung summiert sich von Tag zu Tag.</p>
+            </article>
+        </div>
+
+        <div class="heat-strip" id="heat-strip" aria-label="Tageshöchstwerte seit dem 29. Juli"></div>
+        <div class="heat-axis"><span id="h-start">&nbsp;</span><span>heute</span></div>
+        <ul class="heat-legend">
+            <li><span class="swatch t-cold"></span>unter 15 °C</li>
+            <li><span class="swatch t-cool"></span>15–20 °C</li>
+            <li><span class="swatch t-mild"></span>20–25 °C</li>
+            <li><span class="swatch t-warm"></span>25–30 °C</li>
+            <li><span class="swatch t-hot"></span>ab 30 °C (Hitzetag)</li>
+            <li><span class="swatch dot"></span>Tropennacht</li>
+        </ul>
+        <p class="hint" id="h-last">&nbsp;</p>
+        <p class="source">
+            Definitionen: MeteoSchweiz. Gesundheitsfolgen:
+            <a href="https://www.gsi.be.ch/de/start/themen/gesundheit/gesundheitsfoerderung-und-praevention/gesundheit-und-hitze/faq.html" target="_blank" rel="noopener">Kanton Bern, Gesundheit und Hitze</a>.
+        </p>
+    </section>
     <h2 class="section-title">Im Detail</h2>
 
     <nav class="range" aria-label="Zeitraum">
@@ -139,6 +176,6 @@
     </footer>
 </main>
 
-<script src="script.js"></script>
+<script src="script.js?v=2"></script>
 </body>
 </html>

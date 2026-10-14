@@ -154,3 +154,79 @@ code {
 .intro p { margin: 6px 0 0; }
 .intro .source { font-size: 0.8rem; color: var(--muted); }
 .intro .source a { color: inherit; }
+/* Hitze */
+.heat { margin-bottom: 28px; }
+
+.heat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 10px 0 16px;
+}
+
+.heat-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 4px solid #d7301f;
+    border-radius: 12px;
+    padding: 14px 16px;
+}
+
+.heat-value { font-size: 2.2rem; font-weight: 700; line-height: 1; }
+.heat-card h3 { margin: 4px 0; font-size: 1rem; }
+.heat-card p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+
+.heat-strip { display: flex; gap: 2px; height: 56px; }
+.heat-strip .day { flex: 1; border-radius: 2px; position: relative; }
+
+/* Punkt unten im Streifen = Tropennacht */
+.heat-strip .day.tropical::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 5px;
+    width: 6px;
+    height: 6px;
+    margin-left: -3px;
+    border-radius: 50%;
+    background: var(--text);
+}
+
+.t-cold { background: #2c5f9e; }
+.t-cool { background: #8fbfe0; }
+.t-mild { background: #f6d860; }
+.t-warm { background: #f39c3d; }
+.t-hot  { background: #d7301f; }
+
+.heat-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.heat-legend {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.swatch {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 5px;
+    vertical-align: -1px;
+}
+
+.swatch.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text); }
+
+.heat .source { font-size: 0.8rem; color: var(--muted); }
+.heat .source a { color: inherit; }

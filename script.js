@@ -343,7 +343,58 @@ function renderStory(rows) {
         setText('f-rain-text', `des gesamten Regens (${formatNumber(total, 'mm')}) fiel an nur drei Tagen.${dryText}`);
     }
 }
+// ---------- Hitze ----------
 
+// Farbklasse je nach Tageshöchstwert
+function temperatureClass(value) {
+    if (value >= 30) return 't-hot';
+    if (value >= 25) return 't-warm';
+    if (value >= 20) return 't-mild';
+    if (value >= 15) return 't-cool';
+    return 't-cold';
+}
+
+async function loadHeat() {
+    try {
+        renderHeat(await loadJson(`${ENDPUNKT}?view=heat`));
+    } catch (error) {
+        console.warn('Hitze-Daten nicht verfügbar:', error.message);
+        document.querySelector('#heat').hidden = true;
+    }
+}
+
+function renderHeat(heat) {
+    setText('h-days', heat.heat_days);
+    setText('h-nights', heat.tropical_nights);
+    setText('h-waves', heat.heatwaves.length);
+
+    if (heat.heatwaves.length > 0) {
+        const longest = heat.heatwaves.reduce((a, b) => (b.days > a.days ? b : a));
+        setText('h-waves-text',
+            `Mindestens drei Tage in Folge mit einem Tagesmittel ab 25 °C. Die längste dauerte ` +
+            `${longest.days} Tage, vom ${shortDate(longest.from)} bis ${shortDate(longest.to)}`);
+    }
+    if (heat.last_heat_day) {
+        setText('h-last', `Letzter Hitzetag: ${formatDay(heat.last_heat_day)}`);
+    }
+
+    if (heat.days.length > 0) {
+        setText('h-start', formatDay(heat.days[0].date));
+    }
+
+    // Ein Streifen pro Tag, gefärbt nach dem Höchstwert
+    const strip = document.querySelector('#heat-strip');
+    strip.innerHTML = '';
+    heat.days.forEach((day) => {
+        const cell = document.createElement('span');
+        cell.className = `day ${temperatureClass(day.temp_max_c)}`;
+        if (day.tropical_night) {
+            cell.classList.add('tropical');
+        }
+        cell.title = `${formatDay(day.date)}: max ${formatNumber(day.temp_max_c, '°C')}, min ${formatNumber(day.temp_min_c, '°C')}`;
+        strip.appendChild(cell);
+    });
+}
 // ---------- Bedienung ----------
 
 document.querySelectorAll('.range button').forEach((button) => {
@@ -358,3 +409,4 @@ document.querySelectorAll('.range button').forEach((button) => {
 loadData();
 loadStatus();
 loadStory();
+loadHeat();
