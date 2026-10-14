@@ -13,9 +13,9 @@ try {
     $view = $_GET['view'] ?? 'hourly';
     $days = max(1, min(365, (int) ($_GET['days'] ?? 7)));
 
-    if (!in_array($view, ['hourly', 'daily', 'status'], true)) {
+    if (!in_array($view, ['hourly', 'daily', 'status', 'heat'], true)) {
         http_response_code(400);
-        echo json_encode(['error' => 'view muss hourly, daily oder status sein.']);
+        echo json_encode(['error' => 'view muss hourly, daily, status oder heat sein.']);
         exit;
     }
 
@@ -25,6 +25,7 @@ try {
         'hourly' => fetchHourly($pdo, sinceDate($days)),
         'daily'  => fetchDaily($pdo, sinceDate($days)),
         'status' => fetchStatus($pdo),
+        'heat'   => fetchHeat($pdo),
     };
 
     echo json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);

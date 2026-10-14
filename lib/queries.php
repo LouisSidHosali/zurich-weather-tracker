@@ -1,13 +1,10 @@
 <?php
-// Gemeinsame Abfragen für unload.php und etl/export_fallback.php.
 
-// PDO liefert DECIMAL als String, der Datenvertrag verlangt Zahlen
 function toFloat($value): ?float
 {
     return $value === null ? null : round((float) $value, 1);
 }
 
-// Erster Zeitpunkt des Zeitraums: heute + ($days - 1) Tage davor, ab 00:00
 function sinceDate(int $days): string
 {
     return date('Y-m-d 00:00:00', strtotime('-' . ($days - 1) . ' days'));
@@ -84,5 +81,76 @@ function fetchStatus(PDO $pdo): array
             fn($value) => is_numeric($value) ? (int) $value : $value,
             $lastRun
         ),
+    ];
+}
+function fetchHeat(PDO $pdo): array
+{
+
+$statement = $pdo->query(
+        'SELECT DATE(measured_at)  AS date,
+                MAX(temperature_c) AS temp_max_c,
+                MIN(temperature_c) AS temp_min_c,
+                AVG(temperature_c) AS temp_avg_c
+         FROM weather_hourly
+         GROUP BY DATE(measured_at)
+         HAVING COUNT(*) >= 20
+         ORDER BY date'
+    );
+
+    $days = [];
+    foreach ($statement->fetchAll() as $row) {
+        $max = toFloat($row['temp_max_c']);
+        $min = toFloat($row['temp_min_c']);
+        $avg = toFloat($row['temp_avg_c']);
+
+        $days[] = [
+            'date'           => $row['date'],
+            'temp_max_c'     => $max,
+            'temp_min_c'     => $min,
+            'temp_avg_c'     => $avg,
+            'heat_day'       => $max >= 30,   // Hitzetag: mindestens 30 °C
+            'tropical_night' => $min >= 20,   // Tropennacht: nie unter 20 °C
+            'hot_mean'       => $avg >= 25,   // Tagesmittel ab 25 °C
+        ];
+    }
+
+    // Hitzewelle: mindestens 3 Tage in Folge mit Tagesmittel ab 25 °C
+    $heatwaves = [];
+    $run = [];
+    foreach ($days as $day) {
+        $followsLast = $run !== []
+            && strtotime(end($run)['date'] . ' +1 day') === strtotime($day['date']);
+
+        if ($day['hot_mean'] && ($run === [] || $followsLast)) {
+            $run[] = $day;
+            continue;
+        }
+        if (count($run) >= 3) {
+            $heatwaves[] = summarizeHeatwave($run);
+        }
+        $run = $day['hot_mean'] ? [$day] : [];
+    }
+    if (count($run) >= 3) {
+        $heatwaves[] = summarizeHeatwave($run);
+    }
+
+    $heatDays = array_filter($days, fn($day) => $day['heat_day']);
+
+    return [
+        'heat_days'       => count($heatDays),
+        'tropical_nights' => count(array_filter($days, fn($day) => $day['tropical_night'])),
+        'last_heat_day'   => $heatDays === [] ? null : end($heatDays)['date'],
+        'heatwaves'       => $heatwaves,
+        'days'            => $days,
+    ];
+}
+
+function summarizeHeatwave(array $run): array
+{
+    return [
+        'from'       => $run[0]['date'],
+        'to'         => end($run)['date'],
+        'days'       => count($run),
+        'temp_max_c' => max(array_column($run, 'temp_max_c')),
     ];
 }
