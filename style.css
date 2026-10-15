@@ -1,232 +1,291 @@
+/* ---------- Grundlagen ---------- */
+
 :root {
-    --bg: #f4f6f9;
-    --card: #ffffff;
-    --text: #1d2433;
-    --muted: #64708a;
-    --line: #e2e6ee;
-    --accent: #e4572e;
-    --rain: #2f80ed;
+    --ink: #14213d;        /* Text, dunkles Blau */
+    --muted: #5c6784;      /* Nebentext */
+    --paper: #ffffff;      /* Hintergrund */
+    --sand: #fff6dc;       /* helles Gelb für Bänder */
+    --sun: #ffc93c;        /* Gelb, Akzent */
+    --sky: #eaf2fb;        /* helles Blau für die Live-Ansicht */
+    --line: #e6e8ef;
+    --hot: #d7301f;
+    --rain: #1d3f8f;
+
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    --shadow: 0 12px 32px rgba(20, 33, 61, 0.08);
 }
 
 * { box-sizing: border-box; }
 
 body {
     margin: 0;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.5;
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--ink);
+    background: var(--paper);
 }
 
-main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 32px 16px 48px;
+h1, h2, h3 { font-family: var(--serif); line-height: 1.15; margin: 0; }
+h2 { font-size: clamp(1.9rem, 4vw, 2.75rem); margin-bottom: 20px; }
+h3 { font-size: 1.25rem; }
+
+a { color: inherit; }
+
+/* Inhaltsbreiten: schmal für Text, breiter für Grafiken */
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+.text { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+.text p { margin: 0 0 1.2em; }
+
+.source, .note, .caption { font-size: 0.85rem; color: var(--muted); }
+.note { font-style: italic; }
+
+/* ---------- Titel ---------- */
+
+.hero {
+    background: var(--sun);
+    padding: 96px 0 80px;
 }
 
-.eyebrow {
-    margin: 0;
+.eyebrow, .chapter-no {
+    margin: 0 0 16px;
     font-size: 0.8rem;
-    letter-spacing: 0.08em;
+    font-weight: 700;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--muted);
 }
 
-h1 { margin: 4px 0 8px; font-size: 2.2rem; line-height: 1.2; }
-h2 { margin: 0; font-size: 1.15rem; }
-
-.lead { margin: 0 0 24px; color: var(--muted); max-width: 65ch; font-size: 1.05rem; }
-
-/* Kennzahlen */
-.kpis {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
+.hero h1 {
+    font-size: clamp(2.6rem, 7vw, 5rem);
+    font-weight: 800;
+    max-width: 16ch;
+    margin-bottom: 28px;
 }
 
-.kpi {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
+.lead { font-size: clamp(1.15rem, 2.2vw, 1.4rem); max-width: 40ch; margin: 0 0 24px; }
+.byline { font-size: 0.9rem; margin: 0; }
+
+/* ---------- Reportage ---------- */
+
+.reportage { padding-top: 80px; padding-bottom: 64px; }
+
+.reportage p:first-child::first-letter {
+    float: left;
+    font-family: var(--serif);
+    font-size: 4.2rem;
+    line-height: 0.9;
+    padding: 6px 10px 0 0;
+    color: var(--hot);
 }
 
-.kpi-label { font-size: 0.85rem; color: var(--muted); }
-.kpi-value { font-size: 1.8rem; font-weight: 700; }
-.kpi-sub   { font-size: 0.8rem; color: var(--muted); }
-
-/* Zeitraum-Buttons */
-.range { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
-
-.range button {
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--text);
-    padding: 8px 14px;
-    border-radius: 999px;
-    font: inherit;
-    cursor: pointer;
+.question {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    line-height: 1.3;
+    margin-top: 1.6em;
+    padding-left: 20px;
+    border-left: 4px solid var(--sun);
 }
 
-.range button.active {
-    background: var(--text);
-    color: #fff;
-    border-color: var(--text);
+/* ---------- Bänder und Kapitel ---------- */
+
+.band { padding: 88px 0; }
+.band-dark { background: var(--ink); color: #fff; }
+.band-dark .source, .band-dark .legend { color: #c7cde0; }
+.band-sand { background: var(--sand); }
+.band-blue { background: #edf3fb; }
+.band-live { background: var(--sky); }
+
+.chapter { padding: 96px 0; }
+.chapter-no { color: var(--hot); }
+.band-dark .chapter-no { color: var(--sun); }
+.band-blue .chapter-no, .band-live .chapter-no { color: var(--rain); }
+
+.text-intro { max-width: 680px; font-size: 1.15rem; margin: 0 0 32px; }
+
+/* Grafik-Block mit grosser Zahl, etwas breiter als der Text */
+.figure {
+    max-width: 960px;
+    margin: 8px auto 48px;
+    padding: 28px 28px 20px;
+    background: var(--paper);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
 }
 
-.status { min-height: 1.5em; font-size: 0.9rem; color: var(--muted); }
-.status.error { color: #c0392b; }
-
-/* Diagramm-Karten */
-.card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 16px;
+.big-number {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+    margin-bottom: 12px;
 }
-
-.hint { margin: 0 0 10px; font-size: 0.85rem; color: var(--muted); }
+.big-number span { color: var(--hot); font-size: 1.6em; }
+#chapter-rain .big-number span { color: var(--rain); }
 
 .chart-box { position: relative; height: 320px; }
+.caption { margin: 12px 0 0; }
 
-footer { margin-top: 24px; font-size: 0.85rem; color: var(--muted); }
-footer a { color: inherit; }
+/* Tipp-Box */
+.tip {
+    background: var(--paper);
+    border: 2px solid var(--sun);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin: 0 0 1.4em;
+}
+.band-sand .tip { border-color: var(--hot); }
+.tip h3 { font-size: 1.1rem; margin-bottom: 8px; }
+.tip ul { margin: 0; padding-left: 1.2em; }
+.tip li { margin-bottom: 4px; }
 
-/* Methode */
-.method-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-    margin-top: 8px;
+/* Liste der Hitzewellen */
+.wave-list { list-style: none; padding: 0; margin: 0 0 1.4em; display: grid; gap: 8px; }
+.wave-list li {
+    background: var(--sand);
+    border-left: 4px solid var(--hot);
+    border-radius: 8px;
+    padding: 10px 14px;
 }
 
-.method h3 {
-    margin: 0 0 4px;
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-}
+/* ---------- Tagesstreifen ---------- */
 
-.method p { margin: 0; font-size: 0.95rem; }
-
-code {
-    font-size: 0.85em;
-    background: var(--bg);
-    padding: 1px 5px;
-    border-radius: 4px;
-}
-
-/* Befunde */
-.story { margin-bottom: 28px; }
-
-.story-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 12px;
-    margin-top: 10px;
-}
-
-.finding {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-left: 4px solid var(--accent);
-    border-radius: 12px;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-}
-
-.finding:last-child { border-left-color: var(--rain); }
-
-.finding-label { font-size: 0.85rem; color: var(--muted); }
-.finding-value { font-size: 1.6rem; font-weight: 700; }
-.finding p { margin: 4px 0 0; font-size: 0.95rem; }
-
-.section-title { margin-bottom: 10px; }
-
-/* Einleitung */
-.intro { max-width: 65ch; margin-bottom: 28px; }
-.intro p { margin: 6px 0 0; }
-.intro .source { font-size: 0.8rem; color: var(--muted); }
-.intro .source a { color: inherit; }
-/* Hitze */
-.heat { margin-bottom: 28px; }
-
-.heat-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 12px;
-    margin: 10px 0 16px;
-}
-
-.heat-card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-top: 4px solid #d7301f;
-    border-radius: 12px;
-    padding: 14px 16px;
-}
-
-.heat-value { font-size: 2.2rem; font-weight: 700; line-height: 1; }
-.heat-card h3 { margin: 4px 0; font-size: 1rem; }
-.heat-card p { margin: 0; font-size: 0.9rem; color: var(--muted); }
-
-.heat-strip { display: flex; gap: 2px; height: 56px; }
-.heat-strip .day { flex: 1; border-radius: 2px; position: relative; }
+.heat-strip { display: flex; gap: 2px; height: 120px; }
+.heat-strip .day { flex: 1; border-radius: 3px; position: relative; }
 
 /* Punkt unten im Streifen = Tropennacht */
 .heat-strip .day.tropical::after {
     content: '';
     position: absolute;
     left: 50%;
-    bottom: 5px;
+    bottom: 6px;
     width: 6px;
     height: 6px;
     margin-left: -3px;
     border-radius: 50%;
-    background: var(--text);
+    background: #fff;
 }
 
 .t-cold { background: #2c5f9e; }
 .t-cool { background: #8fbfe0; }
 .t-mild { background: #f6d860; }
 .t-warm { background: #f39c3d; }
-.t-hot  { background: #d7301f; }
+.t-hot  { background: var(--hot); }
 
 .heat-axis {
     display: flex;
     justify-content: space-between;
-    margin-top: 4px;
-    font-size: 0.75rem;
-    color: var(--muted);
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: #c7cde0;
 }
 
-.heat-legend {
+.legend {
     list-style: none;
     padding: 0;
-    margin: 8px 0 0;
+    margin: 20px 0 24px;
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 14px;
-    font-size: 0.8rem;
-    color: var(--muted);
+    gap: 8px 18px;
+    font-size: 0.85rem;
 }
 
 .swatch {
     display: inline-block;
     width: 12px;
     height: 12px;
-    border-radius: 2px;
-    margin-right: 5px;
+    border-radius: 3px;
+    margin-right: 6px;
     vertical-align: -1px;
 }
+.swatch.dot { width: 8px; height: 8px; border-radius: 50%; background: #fff; }
 
-.swatch.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text); }
+/* ---------- Live-Ansicht ---------- */
 
-.heat .source { font-size: 0.8rem; color: var(--muted); }
-.heat .source a { color: inherit; }
+.range { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+
+.range button {
+    border: 2px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.range button.active { background: var(--ink); color: #fff; }
+
+.kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.kpi {
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+.kpi-label { font-size: 0.85rem; color: var(--muted); }
+.kpi-value { font-family: var(--serif); font-size: 2rem; font-weight: 800; }
+.kpi-sub { font-size: 0.8rem; color: var(--muted); }
+
+.status { min-height: 1.5em; font-size: 0.9rem; color: var(--muted); }
+.status.error { color: var(--hot); }
+
+.card {
+    background: var(--paper);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+}
+.card h3 { margin-bottom: 4px; }
+.hint { margin: 0 0 12px; font-size: 0.9rem; color: var(--muted); }
+
+/* ---------- Methode und Fuss ---------- */
+
+.method { padding-top: 88px; padding-bottom: 88px; }
+
+.method-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+}
+.method h3 { font-family: var(--sans); font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.method p { margin: 0; font-size: 0.95rem; }
+
+code {
+    font-size: 0.85em;
+    background: var(--sand);
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
+footer {
+    background: var(--ink);
+    color: #c7cde0;
+    padding: 40px 0;
+    font-size: 0.85rem;
+}
+footer p { margin: 0 0 8px; }
+
+/* ---------- Kleine Bildschirme ---------- */
+
+@media (max-width: 600px) {
+    .hero { padding: 64px 0 56px; }
+    .reportage { padding-top: 56px; }
+    .chapter, .band { padding: 64px 0; }
+    .figure { margin-left: 12px; margin-right: 12px; padding: 20px 14px 16px; }
+    .chart-box { height: 260px; }
+    .heat-strip { height: 90px; gap: 1px; }
+    .heat-strip .day.tropical::after { width: 4px; height: 4px; margin-left: -2px; }
+    .heat-axis span:nth-child(2), .heat-axis span:nth-child(3) { display: none; }
+}

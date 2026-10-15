@@ -3,151 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zürich Weather Tracker</title>
-    <link rel="stylesheet" href="style.css?v=2">
+    <title>Der Hitzkopf, der nicht abkühlen will – Zürich Weather Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
+
+<!-- Titel -->
+<header class="hero">
+    <div class="wrap">
+        <p class="eyebrow">Zürich Weather Tracker · Sommer 2026</p>
+        <h1>Der Hitzkopf, der nicht abkühlen will</h1>
+        <p class="lead">
+            Im August 2026 leistete ich Zivildienst in einem Altersheim in Zürich.
+            Eine Reportage über die Hitze – und darüber, was die Wetterdaten dazu sagen.
+        </p>
+        <p class="byline">Text, Daten und Umsetzung: Louis Hosali</p>
+    </div>
+</header>
+
 <main>
-    <header>
-        <p class="eyebrow">Zürich Weather Tracker · Einzelprojekt IM3</p>
-        <h1 id="headline">Wie sich das Wetter in Zürich verändert</h1>
-        <p class="lead" id="lead">
-            Wie entwickeln sich Temperatur und Niederschlag in Zürich?
-            Jede Stunde holt ein Skript die aktuellen Werte und speichert sie in einer eigenen Datenbank.
-        </p>
-    </header>
 
-    <section class="intro" aria-labelledby="intro-title">
-        <h2 id="intro-title">Warum Zürichs Wetter beobachten?</h2>
+    <!-- Reportage -->
+    <article class="text reportage">
         <p>
-            Der Sommer 2026 war in der Schweiz der heisseste seit Messbeginn, begleitet von extremer Trockenheit.
-            In Zürich stieg das Thermometer auf 38,3 Grad, so hoch wie noch nie seit 1864.
-            Wer auf Hitze und Trockenheit reagieren will, muss zuerst wissen, wie sich das Wetter entwickelt.
+            Der Schweiss tropft mir den Rücken hinunter, die langen grauen Hosen kleben an meinen Beinen.
+            Erschöpft lehne ich mich an die Küchenablage. Das kalte Glas Wasser in meiner Hand ist schon wieder lauwarm.
+            Vor mir legt Herr M. den Stift fürs Kreuzworträtsel auf den Tisch und stützt den Kopf in die Hände.
+            Rechts von mir fallen Frau R. immer wieder die Augen zu. Eigentlich möchte sie schlafen, aber nicht in ihrem Zimmer.
+            Dort könne sie nicht atmen, sagt sie, sie habe das Gefühl zu ersticken. Sie beschreibt es genau so wie meine Grossmutter.
+            In deren Altersheim sind in den letzten zwei Wochen drei Bewohnende gestorben. Hier zum Glück noch niemand.
+            Gut geht es aber niemandem.
         </p>
         <p>
-            Dieser Tracker beobachtet deshalb Stunde für Stunde Temperatur und Regen in Zürich und fragt:
-            Wie lange bleibt es warm? Wie schnell kühlt es ab? Und fällt genug Regen?
+            Ich stosse mich von der Ablage ab und schlurfe durch den Gang. Hier ist es etwas erträglicher. Ein wenig.
+            Im Büro mache ich einen Boxenstopp, stelle mich vor den Ventilator und fächle mir zusätzlich mit meinem
+            hellgrünen T-Shirt Luft zu. Mein Kollege kommt völlig verschwitzt herein. «Ich habe gerade Frau S. gewaschen,
+            es ist fast nicht auszuhalten. Keine Ahnung, wie lange ich das noch schaffe.» Ich verstehe ihn kaum,
+            zwischen fast jedem Wort nimmt er einen Schluck aus seiner Wasserflasche.
         </p>
-        <p class="source">
-            Quellen: <a href="https://www.meteoschweiz.admin.ch/service-und-publikationen/publikationen/berichte-und-bulletins/2026/klimabulletin-sommer-2026.html" target="_blank" rel="noopener">MeteoSchweiz, Klimabulletin Sommer 2026</a>,
-            <a href="https://tsri.ch/a/zuerich-und-die-schweiz-erlebten-den-heissesten-sommer-seit-messbeginn" target="_blank" rel="noopener">Tsüri.ch</a>
+        <p>
+            Jetzt bin ich an der Reihe, in eines der Zimmer zu gehen. Vorher lege ich mir noch ein Kühltuch um den Nacken.
+            Die Abkühlung hält nur kurz. Sobald ich durch den Türrahmen trete, fühlt es sich an, als liefe ich gegen eine Wand.
+            Mein Atem wird flacher, ich beginne sofort wieder zu schwitzen. Herr G. begrüsst mich fröhlich und spielt mir
+            etwas auf seinem Charango vor. Auch ihm ist es zu heiss, aber wenigstens erinnert ihn die Hitze an seine Heimat.
         </p>
-    </section>
-
-    <section class="story" aria-labelledby="story-title">
-        <h2 id="story-title">Was die Daten zeigen</h2>
-        <div class="story-grid">
-            <article class="finding">
-                <span class="finding-label">Abkühlung</span>
-                <span class="finding-value" id="f-cooling">–</span>
-                <p id="f-cooling-text">&nbsp;</p>
-            </article>
-            <article class="finding">
-                <span class="finding-label">Spannweite</span>
-                <span class="finding-value" id="f-range">–</span>
-                <p id="f-range-text">&nbsp;</p>
-            </article>
-            <article class="finding">
-                <span class="finding-label">Regen in Schüben</span>
-                <span class="finding-value" id="f-rain">–</span>
-                <p id="f-rain-text">&nbsp;</p>
-            </article>
-        </div>
-    </section>
-    <section class="heat" id="heat" aria-labelledby="heat-title">
-        <h2 id="heat-title">Der Hitzesommer in Zahlen</h2>
-        <p class="hint">Berechnet aus den stündlichen Werten in der Datenbank, seit dem 29. Juli.</p>
-
-        <div class="heat-grid">
-            <article class="heat-card">
-                <span class="heat-value" id="h-days">–</span>
-                <h3>Hitzetage</h3>
-                <p>Tage mit mindestens 30 °C. Der Körper muss ständig kühlen, das belastet Herz und Kreislauf.</p>
-            </article>
-            <article class="heat-card">
-                <span class="heat-value" id="h-nights">–</span>
-                <h3>Tropennächte</h3>
-                <p>Nächte, in denen es nicht unter 20 °C abkühlt. Der Körper erholt sich im Schlaf kaum – besonders gefährlich für ältere Menschen.</p>
-            </article>
-            <article class="heat-card">
-                <span class="heat-value" id="h-waves">–</span>
-                <h3>Hitzewellen</h3>
-                <p id="h-waves-text">Mindestens drei Tage in Folge mit einem Tagesmittel ab 25 °C. Die Belastung summiert sich von Tag zu Tag.</p>
-            </article>
-        </div>
-
-        <div class="heat-strip" id="heat-strip" aria-label="Tageshöchstwerte seit dem 29. Juli"></div>
-        <div class="heat-axis"><span id="h-start">&nbsp;</span><span>heute</span></div>
-        <ul class="heat-legend">
-            <li><span class="swatch t-cold"></span>unter 15 °C</li>
-            <li><span class="swatch t-cool"></span>15–20 °C</li>
-            <li><span class="swatch t-mild"></span>20–25 °C</li>
-            <li><span class="swatch t-warm"></span>25–30 °C</li>
-            <li><span class="swatch t-hot"></span>ab 30 °C (Hitzetag)</li>
-            <li><span class="swatch dot"></span>Tropennacht</li>
-        </ul>
-        <p class="hint" id="h-last">&nbsp;</p>
-        <p class="source">
-            Definitionen: MeteoSchweiz. Gesundheitsfolgen:
-            <a href="https://www.gsi.be.ch/de/start/themen/gesundheit/gesundheitsfoerderung-und-praevention/gesundheit-und-hitze/faq.html" target="_blank" rel="noopener">Kanton Bern, Gesundheit und Hitze</a>.
+        <p>
+            Völlig erschlagen komme ich aus dem Zimmer. Drei Wochen liegen noch vor mir, keine Abkühlung in Sicht.
+            Ich kann nur hoffen und mir vorstellen, wie es den Bewohnerinnen und Bewohnern geht.
+            Dass sie unter der Hitze leiden, ist offensichtlich.
         </p>
-    </section>
-    <h2 class="section-title">Im Detail</h2>
+        <p class="question">Ich frage mich: Ab wann wird Hitze gefährlich?</p>
+    </article>
 
-    <nav class="range" aria-label="Zeitraum">
-        <button data-days="3">3 Tage</button>
-        <button data-days="7" class="active">7 Tage</button>
-        <button data-days="30">30 Tage</button>
-        <button data-days="60">60 Tage</button>
-        <button data-days="365">Alles</button>
-    </nav>
-
-    <section class="kpis">
-        <div class="kpi">
-            <span class="kpi-label">Zuletzt gemessen</span>
-            <span class="kpi-value" id="kpi-now">–</span>
-            <span class="kpi-sub" id="kpi-now-time">&nbsp;</span>
-        </div>
-        <div class="kpi">
-            <span class="kpi-label">Wärmste Stunde</span>
-            <span class="kpi-value" id="kpi-max">–</span>
-            <span class="kpi-sub" id="kpi-max-time">&nbsp;</span>
-        </div>
-        <div class="kpi">
-            <span class="kpi-label">Kälteste Stunde</span>
-            <span class="kpi-value" id="kpi-min">–</span>
-            <span class="kpi-sub" id="kpi-min-time">&nbsp;</span>
-        </div>
-        <div class="kpi">
-            <span class="kpi-label">Regen total</span>
-            <span class="kpi-value" id="kpi-rain">–</span>
-            <span class="kpi-sub" id="kpi-rain-days">&nbsp;</span>
+    <!-- Überblick: Tagesstreifen -->
+    <section class="band band-dark" id="overview">
+        <div class="wrap">
+            <p class="chapter-no">Überblick</p>
+            <h2>Der Sommer auf einen Blick</h2>
+            <p class="text-intro">
+                Der Sommer 2026 war in der Schweiz der heisseste seit Messbeginn. In Zürich wurden bis zu 38,3 Grad gemessen,
+                so viel wie noch nie seit 1864. Seit dem 29. Juli speichert mein Tracker jede Stunde die Temperatur in Zürich.
+                Jeder Streifen ist ein Tag, gefärbt nach dem Höchstwert.
+            </p>
+            <div class="heat-strip" id="heat-strip" aria-label="Tageshöchstwerte vom 29. Juli bis 30. September"></div>
+            <div class="heat-axis"><span>29. Juli</span><span>August</span><span>September</span><span>30. September</span></div>
+            <ul class="legend">
+                <li><span class="swatch t-cold"></span>unter 15 °C</li>
+                <li><span class="swatch t-cool"></span>15–20 °C</li>
+                <li><span class="swatch t-mild"></span>20–25 °C</li>
+                <li><span class="swatch t-warm"></span>25–30 °C</li>
+                <li><span class="swatch t-hot"></span>ab 30 °C</li>
+                <li><span class="swatch dot"></span>Tropennacht</li>
+            </ul>
+            <p class="source">
+                Quellen: <a href="https://www.meteoschweiz.admin.ch/service-und-publikationen/publikationen/berichte-und-bulletins/2026/klimabulletin-sommer-2026.html" target="_blank" rel="noopener">MeteoSchweiz, Klimabulletin Sommer 2026</a>,
+                <a href="https://tsri.ch/a/zuerich-und-die-schweiz-erlebten-den-heissesten-sommer-seit-messbeginn" target="_blank" rel="noopener">Tsüri.ch</a>
+            </p>
         </div>
     </section>
 
-    <p class="status" id="status">Daten werden geladen …</p>
-
-    <section class="card">
-        <h2 id="title-temperature">Temperatur</h2>
-        <p class="hint" id="hint-temperature">Stündliche Werte in °C</p>
-        <div class="chart-box"><canvas id="chart-temperature"></canvas></div>
+    <!-- Kapitel 1: Hitzetage -->
+    <section class="chapter" id="chapter-heatdays">
+        <div class="text">
+            <p class="chapter-no">Kapitel 1</p>
+            <h2>Hitzetage</h2>
+        </div>
+        <div class="figure">
+            <div class="big-number"><span id="n-heatdays">21</span> Hitzetage</div>
+            <div class="chart-box"><canvas id="chart-heatdays"></canvas></div>
+            <p class="caption">Höchsttemperatur pro Tag, 29. Juli bis 30. September. Rot: Hitzetag (ab 30 °C).</p>
+        </div>
+        <div class="text">
+            <p>
+                Ein Hitzetag ist ein Tag, an dem es mindestens 30 °C heiss wird. Zwischen Ende Juli und Ende September
+                zählte mein Tracker <strong id="n-heatdays-2">21</strong> Hitzetage, <strong id="n-heatdays-aug">16</strong> davon im August –
+                genau in den Wochen meines Zivildiensts.
+            </p>
+            <p>
+                Bei solcher Hitze muss der Körper ständig kühlen. Das belastet Herz und Kreislauf. Ältere Menschen sind
+                besonders gefährdet: Sie schwitzen später und weniger, spüren weniger Durst und trocknen schneller aus.
+                Chronische Krankheiten und manche Medikamente erhöhen das Risiko zusätzlich.
+            </p>
+            <div class="tip">
+                <h3>Was hilft</h3>
+                <ul>
+                    <li>Körperliche Anstrengung in den heissesten Stunden vermeiden.</li>
+                    <li>Regelmässig trinken, mindestens 1,5 Liter pro Tag, auch ohne Durst.</li>
+                    <li>Leicht essen: Früchte, Salate, Gemüse.</li>
+                </ul>
+            </div>
+            <p class="source">
+                Quellen: <a href="https://www.gsi.be.ch/de/start/themen/gesundheit/gesundheitsfoerderung-und-praevention/gesundheit-und-hitze/faq.html" target="_blank" rel="noopener">Kanton Bern, Gesundheit und Hitze</a>,
+                <a href="https://www.bern.ch/mediencenter/medienmitteilungen/aktuell_ptk/es-wird-heiss-tipps-fuer-den-umgang-mit-der-sommerhitze-3/dokumente/drei-goldene-regeln-fur-hitzetage.pdf/download" target="_blank" rel="noopener">BAG, Drei goldene Regeln bei Hitze</a>
+            </p>
+        </div>
     </section>
 
-    <section class="card">
-        <h2 id="title-rain">Niederschlag pro Tag</h2>
-        <p class="hint" id="hint-rain">Summe in Millimetern</p>
-        <div class="chart-box"><canvas id="chart-rain"></canvas></div>
+    <!-- Kapitel 2: Tropennächte -->
+    <section class="chapter band band-sand" id="chapter-nights">
+        <div class="text">
+            <p class="chapter-no">Kapitel 2</p>
+            <h2>Tropennächte</h2>
+        </div>
+        <div class="figure">
+            <div class="big-number"><span id="n-nights">12</span> Tropennächte</div>
+            <div class="chart-box"><canvas id="chart-nights"></canvas></div>
+            <p class="caption">Tiefsttemperatur pro Tag. Rot: Tropennacht (nicht unter 20 °C).</p>
+        </div>
+        <div class="text">
+            <p>
+                Frau R. wollte nicht in ihr Zimmer, weil sie dort keine Luft bekam. Gefährlich wird Hitze vor allem dann,
+                wenn auch die Nacht keine Abkühlung bringt. In einer Tropennacht sinkt die Temperatur nicht unter 20 °C.
+                Der Körper kann sich im Schlaf kaum erholen, und die Belastung nimmt von Tag zu Tag zu.
+            </p>
+            <p>
+                Mein Tracker zählte <strong id="n-nights-2">12</strong> Tropennächte,
+                <strong id="n-nights-aug">10</strong> davon im August.
+            </p>
+            <div class="tip">
+                <h3>Was hilft</h3>
+                <ul>
+                    <li>Tagsüber Fenster schliessen und mit Vorhängen oder Läden abdunkeln.</li>
+                    <li>Nachts und frühmorgens lüften.</li>
+                    <li>Den Körper kühlen: Duschen, kalte Tücher auf Stirn und Nacken, kalte Fuss- und Handbäder.</li>
+                </ul>
+            </div>
+            <p class="note">
+                Als Nachttemperatur dient hier der tiefste Stundenwert des Tages. Er liegt fast immer in der Nacht oder am frühen Morgen.
+            </p>
+        </div>
     </section>
 
-    <section class="card method">
-        <h2>Methode</h2>
+    <!-- Kapitel 3: Hitzewellen -->
+    <section class="chapter" id="chapter-waves">
+        <div class="text">
+            <p class="chapter-no">Kapitel 3</p>
+            <h2>Hitzewellen</h2>
+        </div>
+        <div class="figure">
+            <div class="big-number"><span id="n-waves">3</span> Hitzewellen</div>
+            <div class="chart-box"><canvas id="chart-waves"></canvas></div>
+            <p class="caption">Tagesmitteltemperatur. Rot: Tag in einer Hitzewelle. Linien: Warnschwellen von MeteoSchweiz (25 und 27 °C).</p>
+        </div>
+        <div class="text">
+            <p>
+                Von einer Hitzewelle spricht MeteoSchweiz, wenn die mittlere Tagestemperatur an mindestens drei Tagen in Folge
+                25 °C oder mehr erreicht. Dann warnt der Bund mit Stufe 3, «erhebliche Gefahr». Liegt das Tagesmittel an drei Tagen
+                über 27 °C, gilt Stufe 4, «grosse Gefahr».
+            </p>
+            <p id="waves-text">
+                In meinen Daten gab es drei Hitzewellen. Die längste dauerte acht Tage, vom 9. bis 16. August –
+                mitten in meinem Zivildienst. Stufe 4 wurde knapp nicht erreicht: Über 27 °C lag das Tagesmittel nie mehr als zwei Tage in Folge.
+            </p>
+            <ul class="wave-list" id="wave-list"></ul>
+            <p class="source">
+                Quelle: <a href="https://www.meteoswiss.admin.ch/weather/hazards/explanation-of-the-danger-levels/heat.html" target="_blank" rel="noopener">MeteoSchweiz, Gefahrenstufen Hitze</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Kapitel 4: Regen -->
+    <section class="chapter band band-blue" id="chapter-rain">
+        <div class="text">
+            <p class="chapter-no">Kapitel 4</p>
+            <h2>Und der Regen?</h2>
+        </div>
+        <div class="figure">
+            <div class="big-number"><span id="n-rain">–</span> mm Regen</div>
+            <div class="chart-box"><canvas id="chart-story-rain"></canvas></div>
+            <p class="caption">Niederschlag pro Tag in Millimetern, 29. Juli bis 30. September.</p>
+        </div>
+        <div class="text">
+            <p id="rain-text">
+                Wie viel Regen fiel im Hitzesommer?
+            </p>
+        </div>
+    </section>
+
+    <!-- Live-Ansicht -->
+    <section class="band band-live" id="live">
+        <div class="wrap">
+            <p class="chapter-no">Live</p>
+            <h2>Und jetzt? Die aktuellen Daten</h2>
+            <p class="text-intro">
+                Der Tracker sammelt weiter: Jede Stunde kommt ein neuer Wert dazu.
+                Hier lässt sich der Zeitraum selbst wählen.
+            </p>
+
+            <nav class="range" aria-label="Zeitraum">
+                <button data-days="3">3 Tage</button>
+                <button data-days="7" class="active">7 Tage</button>
+                <button data-days="30">30 Tage</button>
+                <button data-days="60">60 Tage</button>
+                <button data-days="365">Alles</button>
+            </nav>
+
+            <div class="kpis">
+                <div class="kpi">
+                    <span class="kpi-label">Zuletzt gemessen</span>
+                    <span class="kpi-value" id="kpi-now">–</span>
+                    <span class="kpi-sub" id="kpi-now-time">&nbsp;</span>
+                </div>
+                <div class="kpi">
+                    <span class="kpi-label">Wärmste Stunde</span>
+                    <span class="kpi-value" id="kpi-max">–</span>
+                    <span class="kpi-sub" id="kpi-max-time">&nbsp;</span>
+                </div>
+                <div class="kpi">
+                    <span class="kpi-label">Kälteste Stunde</span>
+                    <span class="kpi-value" id="kpi-min">–</span>
+                    <span class="kpi-sub" id="kpi-min-time">&nbsp;</span>
+                </div>
+                <div class="kpi">
+                    <span class="kpi-label">Regen total</span>
+                    <span class="kpi-value" id="kpi-rain">–</span>
+                    <span class="kpi-sub" id="kpi-rain-days">&nbsp;</span>
+                </div>
+            </div>
+
+            <p class="status" id="status">Daten werden geladen …</p>
+
+            <div class="card">
+                <h3 id="title-temperature">Temperatur</h3>
+                <p class="hint" id="hint-temperature">Stündliche Werte in °C</p>
+                <div class="chart-box"><canvas id="chart-temperature"></canvas></div>
+            </div>
+
+            <div class="card">
+                <h3 id="title-rain">Niederschlag pro Tag</h3>
+                <p class="hint" id="hint-rain">Summe in Millimetern</p>
+                <div class="chart-box"><canvas id="chart-rain"></canvas></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Methode -->
+    <section class="wrap method" id="method">
+        <h2>Methode und Grenzen</h2>
         <div class="method-grid">
             <div>
                 <h3>Sammeln</h3>
-                <p>Ein Cronjob ruft jede Stunde <code>etl/load.php</code> auf.
-                   Bisher <strong id="m-runs">–</strong> Durchläufe,
-                   <strong id="m-total">–</strong> Stunden gespeichert
+                <p>Ein Cronjob ruft jede Stunde <code>etl/load.php</code> auf. Das Skript holt die Daten von der
+                   API von Open-Meteo, bereinigt sie und speichert sie in einer MySQL-Datenbank.
+                   Bisher <strong id="m-runs">–</strong> Durchläufe, <strong id="m-total">–</strong> Stunden gespeichert
                    (<span id="m-range">–</span>).</p>
             </div>
             <div>
@@ -160,22 +282,27 @@
                    <strong id="m-inserted">–</strong> neu gespeichert.</p>
             </div>
             <div>
-                <h3>Grenze</h3>
-                <p>Die Werte sind stündliche Modelldaten von Open-Meteo für einen Punkt in Zürich,
-                   keine Messung einer einzelnen Wetterstation. Prognosen werden bewusst nicht gespeichert.</p>
+                <h3>Grenzen</h3>
+                <p>Die Werte sind Modelldaten von Open-Meteo für einen Punkt in Zürich, keine Messung einer
+                   einzelnen Wetterstation. Extremwerte fallen darum etwas tiefer aus als gemessen (36,8 statt 38,3 °C).
+                   Die Daten beginnen am 29. Juli, der Juni und Anfang Juli fehlen. Gesundheitsdaten habe ich keine:
+                   Die Seite zeigt die Hitze, nicht ihre Folgen.</p>
             </div>
         </div>
     </section>
 
-    <footer>
-        <p>
-            Daten: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
-            (CC BY 4.0), Standort Zürich (47.38 N, 8.54 E).
-        </p>
-        <p>Ablauf: etl/extract.php → etl/transform.php → etl/load.php (stündlich per Cronjob) → MySQL → unload.php → Chart.js</p>
-    </footer>
 </main>
 
-<script src="script.js?v=2"></script>
+<footer>
+    <div class="wrap">
+        <p>
+            Daten: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0),
+            Standort Zürich (47.38 N, 8.54 E). Einzelprojekt im Modul Interaktive Medien 3, FHGR.
+        </p>
+        <p>Ablauf: etl/extract.php → etl/transform.php → etl/load.php (stündlich per Cronjob) → MySQL → unload.php → Chart.js</p>
+    </div>
+</footer>
+
+<script src="script.js?v=3"></script>
 </body>
 </html>

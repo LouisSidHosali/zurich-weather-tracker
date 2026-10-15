@@ -102,10 +102,13 @@ function formatDay(text) {
 }
 
 function formatNumber(value, unit) {
-    return value === null ? '–' : `${value.toFixed(1).replace('.0', '')} ${unit}`;
+    return value === null ? '–' : `${value.toFixed(1).replace('.0', '').replace('.', ',')} ${unit}`;
 }
 
 // ---------- Diagramme ----------
+
+Chart.defaults.font.family = 'Inter, system-ui, sans-serif';
+Chart.defaults.color = '#5c6784';
 
 const temperatureChart = new Chart(document.querySelector('#chart-temperature'), {
     type: 'line',
@@ -140,8 +143,8 @@ function render() {
     temperatureChart.data.datasets = [{
         label: 'Temperatur',
         data: hourly.map((row) => row.temperature_c),
-        borderColor: '#e4572e',
-        backgroundColor: 'rgba(228, 87, 46, 0.12)',
+        borderColor: '#e8590c',
+        backgroundColor: 'rgba(246, 196, 83, 0.25)',
         borderWidth: 2,
         fill: true,
         tension: 0.3,
@@ -152,7 +155,7 @@ function render() {
     rainChart.data.datasets = [{
         label: 'Niederschlag',
         data: daily.map((row) => row.precipitation_mm),
-        backgroundColor: '#2f80ed',
+        backgroundColor: '#1d3f8f',
         borderRadius: 4,
     }];
     rainChart.update();
@@ -251,99 +254,88 @@ function setStatus(text, isError = false) {
     el.classList.toggle('error', isError);
 }
 
-// ---------- Befunde (über alle gesammelten Tage) ----------
+// ---------- Geschichte (fester Zeitraum) ----------
 
-const MONATE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli',
-    'August', 'September', 'Oktober', 'November', 'Dezember'];
+// Die Texte beziehen sich auf diesen Zeitraum, darum bleiben diese Grafiken fix
+const STORY_START = '2026-07-29';
+const STORY_END = '2026-09-30';
 
-function average(values) {
-    return values.reduce((sum, value) => sum + value, 0) / values.length;
+const FARBE_HITZE = '#d7301f';
+const FARBE_NEUTRAL = '#f6c453';
+const FARBE_KUEHL = '#8fbfe0';
+const FARBE_REGEN = '#1d3f8f';
+const FARBE_LINIE = '#14213d';
+
+function inStory(date) {
+    return date >= STORY_START && date <= STORY_END;
 }
 
+function isAugust(date) {
+    return date.slice(5, 7) === '08';
+}
+
+// "2026-08-03" → "03.08."
 function shortDate(text) {
-    const d = new Date(text + 'T12:00');
-    return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.`;
-}
-
-// "2026-07-29" → "Ende Juli"
-function periodOfMonth(text) {
-    const d = new Date(text + 'T12:00');
-    const part = d.getDate() <= 10 ? 'Anfang' : d.getDate() <= 20 ? 'Mitte' : 'Ende';
-    return `${part} ${MONATE[d.getMonth()]}`;
+    return `${text.slice(8, 10)}.${text.slice(5, 7)}.`;
 }
 
 async function loadStory() {
-    let allDays;
     try {
-        allDays = await loadJson(`${ENDPUNKT}?view=daily&days=365`);
+        const [heat, allDays] = await Promise.all([
+            loadJson(`${ENDPUNKT}?view=heat`),
+            loadJson(`${ENDPUNKT}?view=daily&days=365`),
+        ]);
+        const days = heat.days.filter((day) => inStory(day.date));
+        const waves = heat.heatwaves.filter((wave) => inStory(wave.from));
+        const rainDays = allDays.filter((row) => inStory(row.date) && row.hours >= 20);
+
+        renderStrip(days);
+        renderHeatDays(days);
+        renderNights(days);
+        renderWaves(days, waves);
+        renderRain(rainDays);
     } catch (error) {
-        allDays = (await loadJson(FALLBACK)).daily;
+        console.warn('Geschichte: Daten nicht verfügbar:', error.message);
     }
-    // nur vollständige Tage, sonst verzerrt der laufende Tag die Werte
-    renderStory(allDays.filter((row) => row.hours >= 20));
 }
 
-function renderStory(rows) {
-    if (rows.length < 14) {
-        return;
-    }
-
-    // Abkühlung: erste gegen letzte Woche
-    const firstWeek = rows.slice(0, 7);
-    const lastWeek = rows.slice(-7);
-    const before = average(firstWeek.map((row) => row.temp_avg_c));
-    const after = average(lastWeek.map((row) => row.temp_avg_c));
-    const diff = before - after;
-    const start = periodOfMonth(rows[0].date);
-
-    if (diff >= 1) {
-        setText('headline', `Zürich ist seit ${start} um ${formatNumber(diff, 'Grad')} kühler geworden`);
-    } else if (diff <= -1) {
-        setText('headline', `Zürich ist seit ${start} um ${formatNumber(-diff, 'Grad')} wärmer geworden`);
-    }
-    setText('lead',
-        `In der ersten Woche (${shortDate(firstWeek[0].date)}–${shortDate(firstWeek[6].date)}) lag die Tagesmitteltemperatur ` +
-        `bei ${formatNumber(before, '°C')}, in der letzten Woche (${shortDate(lastWeek[0].date)}–${shortDate(lastWeek[6].date)}) ` +
-        `noch bei ${formatNumber(after, '°C')}. In der Datenbank liegen ${rows.length} vollständige Tage, ` +
-        `jede Stunde kommt ein neuer Wert dazu.`);
-
-    setText('f-cooling', `${formatNumber(Math.abs(diff), 'Grad')} ${diff >= 0 ? 'kühler' : 'wärmer'}`);
-    setText('f-cooling-text', `Tagesmittel erste Woche ${formatNumber(before, '°C')}, letzte Woche ${formatNumber(after, '°C')}.`);
-
-    // Spannweite: heissester und kältester Wert
-    const hottest = rows.reduce((a, b) => (b.temp_max_c > a.temp_max_c ? b : a));
-    const coldest = rows.reduce((a, b) => (b.temp_min_c < a.temp_min_c ? b : a));
-    setText('f-range', `${formatNumber(hottest.temp_max_c, '')}→ ${formatNumber(coldest.temp_min_c, '°C')}`);
-    setText('f-range-text',
-        `Höchstwert am ${formatDay(hottest.date)}, Tiefstwert am ${formatDay(coldest.date)}: ` +
-        `${formatNumber(hottest.temp_max_c - coldest.temp_min_c, 'Grad')} Unterschied.`);
-
-    // Regen: Anteil der drei nassesten Tage und längste Trockenphase (< 1 mm)
-    const rain = rows.map((row) => row.precipitation_mm ?? 0);
-    const total = rain.reduce((sum, value) => sum + value, 0);
-    if (total > 0) {
-        const topThree = [...rain].sort((a, b) => b - a).slice(0, 3).reduce((sum, value) => sum + value, 0);
-
-        let longest = { length: 0, from: 0 };
-        let current = 0;
-        rain.forEach((value, i) => {
-            current = value < 1 ? current + 1 : 0;
-            if (current > longest.length) {
-                longest = { length: current, from: i - current + 1 };
-            }
+// Balkendiagramm mit gestrichelten Grenzlinien (z. B. 30 °C)
+function storyChart(id, days, values, colors, label, unit, lines = []) {
+    const labels = days.map((day) => shortDate(day.date));
+    const datasets = [{
+        type: 'bar',
+        label,
+        data: values,
+        backgroundColor: colors,
+        borderRadius: 2,
+        barPercentage: 1,
+        categoryPercentage: 0.85,
+    }];
+    lines.forEach((line) => {
+        datasets.push({
+            type: 'line',
+            label: line.label,
+            data: labels.map(() => line.value),
+            borderColor: FARBE_LINIE,
+            borderWidth: 1.5,
+            borderDash: [6, 4],
+            pointRadius: 0,
         });
-        let dryText = '';
-        if (longest.length > 1) {
-            const dryFrom = rows[longest.from].date;
-            const dryTo = rows[longest.from + longest.length - 1].date;
-            dryText = ` Dazwischen blieb es bis zu ${longest.length} Tage trocken (${shortDate(dryFrom)}–${shortDate(dryTo)}).`;
-        }
+    });
 
-        setText('f-rain', `${Math.round((topThree / total) * 100)} %`);
-        setText('f-rain-text', `des gesamten Regens (${formatNumber(total, 'mm')}) fiel an nur drei Tagen.${dryText}`);
-    }
+    new Chart(document.querySelector(`#${id}`), {
+        data: { labels, datasets },
+        options: {
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { maxTicksLimit: 9, maxRotation: 0 }, grid: { display: false } },
+                y: { title: { display: true, text: unit } },
+            },
+        },
+    });
 }
-// ---------- Hitze ----------
 
 // Farbklasse je nach Tageshöchstwert
 function temperatureClass(value) {
@@ -354,38 +346,11 @@ function temperatureClass(value) {
     return 't-cold';
 }
 
-async function loadHeat() {
-    try {
-        renderHeat(await loadJson(`${ENDPUNKT}?view=heat`));
-    } catch (error) {
-        console.warn('Hitze-Daten nicht verfügbar:', error.message);
-        document.querySelector('#heat').hidden = true;
-    }
-}
-
-function renderHeat(heat) {
-    setText('h-days', heat.heat_days);
-    setText('h-nights', heat.tropical_nights);
-    setText('h-waves', heat.heatwaves.length);
-
-    if (heat.heatwaves.length > 0) {
-        const longest = heat.heatwaves.reduce((a, b) => (b.days > a.days ? b : a));
-        setText('h-waves-text',
-            `Mindestens drei Tage in Folge mit einem Tagesmittel ab 25 °C. Die längste dauerte ` +
-            `${longest.days} Tage, vom ${shortDate(longest.from)} bis ${shortDate(longest.to)}`);
-    }
-    if (heat.last_heat_day) {
-        setText('h-last', `Letzter Hitzetag: ${formatDay(heat.last_heat_day)}`);
-    }
-
-    if (heat.days.length > 0) {
-        setText('h-start', formatDay(heat.days[0].date));
-    }
-
-    // Ein Streifen pro Tag, gefärbt nach dem Höchstwert
+// Ein Streifen pro Tag, gefärbt nach dem Höchstwert
+function renderStrip(days) {
     const strip = document.querySelector('#heat-strip');
     strip.innerHTML = '';
-    heat.days.forEach((day) => {
+    days.forEach((day) => {
         const cell = document.createElement('span');
         cell.className = `day ${temperatureClass(day.temp_max_c)}`;
         if (day.tropical_night) {
@@ -395,6 +360,97 @@ function renderHeat(heat) {
         strip.appendChild(cell);
     });
 }
+
+function renderHeatDays(days) {
+    const heatDays = days.filter((day) => day.heat_day);
+    setText('n-heatdays', heatDays.length);
+    setText('n-heatdays-2', heatDays.length);
+    setText('n-heatdays-aug', heatDays.filter((day) => isAugust(day.date)).length);
+
+    storyChart('chart-heatdays', days,
+        days.map((day) => day.temp_max_c),
+        days.map((day) => (day.heat_day ? FARBE_HITZE : FARBE_NEUTRAL)),
+        'Höchstwert', '°C',
+        [{ value: 30, label: 'Hitzetag ab' }]);
+}
+
+function renderNights(days) {
+    const nights = days.filter((day) => day.tropical_night);
+    setText('n-nights', nights.length);
+    setText('n-nights-2', nights.length);
+    setText('n-nights-aug', nights.filter((day) => isAugust(day.date)).length);
+
+    storyChart('chart-nights', days,
+        days.map((day) => day.temp_min_c),
+        days.map((day) => (day.tropical_night ? FARBE_HITZE : FARBE_KUEHL)),
+        'Tiefstwert', '°C',
+        [{ value: 20, label: 'Tropennacht ab' }]);
+}
+
+function renderWaves(days, waves) {
+    setText('n-waves', waves.length);
+
+    const inWave = (date) => waves.some((wave) => date >= wave.from && date <= wave.to);
+    storyChart('chart-waves', days,
+        days.map((day) => day.temp_avg_c),
+        days.map((day) => (inWave(day.date) ? FARBE_HITZE : FARBE_NEUTRAL)),
+        'Tagesmittel', '°C',
+        [{ value: 25, label: 'Stufe 3 ab' }, { value: 27, label: 'Stufe 4 ab' }]);
+
+    // Liste der Hitzewellen
+    const list = document.querySelector('#wave-list');
+    list.innerHTML = '';
+    waves.forEach((wave) => {
+        const item = document.createElement('li');
+        const period = document.createElement('strong');
+        period.textContent = `${shortDate(wave.from)}–${shortDate(wave.to)}`;
+        item.append(period, ` ${wave.days} Tage, bis ${formatNumber(wave.temp_max_c, '°C')}`);
+        list.appendChild(item);
+    });
+}
+
+function renderRain(days) {
+    if (days.length === 0) {
+        return;
+    }
+    const total = days.reduce((sum, day) => sum + (day.precipitation_mm ?? 0), 0);
+    setText('n-rain', Math.round(total));
+
+    storyChart('chart-story-rain', days,
+        days.map((day) => day.precipitation_mm),
+        FARBE_REGEN,
+        'Regen', 'mm');
+
+    // Grösster Temperatursturz von einem Tag auf den nächsten
+    let drop = null;
+    for (let i = 1; i < days.length; i++) {
+        const change = days[i].temp_avg_c - days[i - 1].temp_avg_c;
+        if (drop === null || change < drop.change) {
+            drop = { change, before: days[i - 1], after: days[i] };
+        }
+    }
+
+    // Längste Phase ohne nennenswerten Regen (unter 1 mm pro Tag)
+    let longest = { length: 0, from: 0 };
+    let current = 0;
+    days.forEach((day, i) => {
+        current = (day.precipitation_mm ?? 0) < 1 ? current + 1 : 0;
+        if (current > longest.length) {
+            longest = { length: current, from: i - current + 1 };
+        }
+    });
+    const dryFrom = days[longest.from].date;
+    const dryTo = days[longest.from + longest.length - 1].date;
+
+    setText('rain-text',
+        `Zwischen Ende Juli und Ende September fielen in Zürich rund ${Math.round(total)} mm Regen. ` +
+        `Den Schlusspunkt unter die Hitze setzte ein Regentag: Am ${formatDay(drop.after.date)} fielen ` +
+        `${formatNumber(drop.after.precipitation_mm, 'mm')}, und das Tagesmittel sank innerhalb eines Tages ` +
+        `von ${formatNumber(drop.before.temp_avg_c, '°C')} auf ${formatNumber(drop.after.temp_avg_c, '°C')} – der grösste Temperatursturz des Sommers. ` +
+        `Danach blieb es oft trocken: Die längste Phase ohne nennenswerten Regen dauerte ` +
+        `${longest.length} Tage (${shortDate(dryFrom)}–${shortDate(dryTo)}).`);
+}
+
 // ---------- Bedienung ----------
 
 document.querySelectorAll('.range button').forEach((button) => {
@@ -409,4 +465,3 @@ document.querySelectorAll('.range button').forEach((button) => {
 loadData();
 loadStatus();
 loadStory();
-loadHeat();
