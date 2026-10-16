@@ -61,8 +61,7 @@ a { color: inherit; }
     height: 100vh;
     overflow: hidden;                       /* Sonne verschwindet unten wie hinter dem Horizont */
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: center;                    /* Sonne genau in der Mitte vom Bildschirm */
     justify-content: center;
     padding: 0 16px;
 }
@@ -70,8 +69,8 @@ a { color: inherit; }
 .sun {
     --size: min(86vw, 560px, 62vh);         /* passt auf Handy und flache Laptop-Bildschirme */
     width: var(--size);
-    aspect-ratio: 1;
-    flex-shrink: 0;                         /* nicht zusammendrücken, sonst wird es ein Oval */                        /* immer ein Kreis */
+    aspect-ratio: 1;                        /* immer ein Kreis */
+    flex-shrink: 0;                         /* nicht zusammendrücken, sonst wird es ein Oval */
     border-radius: 50%;
     background: color-mix(in srgb, var(--hot) calc(var(--p) * 100%), var(--sun));
     box-shadow: 0 0 90px 30px rgba(255, 201, 60, 0.45);
@@ -81,7 +80,9 @@ a { color: inherit; }
     justify-content: center;
     text-align: center;
     padding: calc(var(--size) * 0.12);      /* Abstand zum Rand, abhängig von der Sonnengrösse */
-    transform: translateY(calc(var(--p) * 55vh)) scale(calc(1 - var(--p) * 0.2));
+    /* Die Sonne sinkt nur so weit, dass der Titel noch ganz sichtbar bleibt:
+       halbe Bildschirmhöhe minus ein Viertel der Sonnengrösse. */
+    transform: translateY(calc(var(--p) * (50vh - var(--size) * 0.25))) scale(calc(1 - var(--p) * 0.2));
 }
 
 .eyebrow, .chapter-no {
@@ -97,23 +98,28 @@ a { color: inherit; }
     font-weight: 800;
 }
 
-/* Lead unter der Sonne, blendet beim Scrollen aus */
+/* Einleitung unten am Bildschirm, blendet beim Scrollen aus */
 .hero-text {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 4vh;
     max-width: 560px;
-    margin-top: 32px;
+    margin: 0 auto;
     text-align: center;
     opacity: calc(1 - var(--p) * 4);
 }
 
-.lead { font-size: clamp(1.05rem, 2.2vw, 1.3rem); margin: 0 0 12px; }
-.byline { font-size: 0.9rem; margin: 0; }
+.lead { font-size: clamp(1rem, 2.2vw, 1.2rem); margin: 0 0 8px; }
+.byline { font-size: 0.85rem; margin: 0; }
 
 /* Wer weniger Bewegung eingestellt hat, sieht die Sonne ruhig */
 @media (prefers-reduced-motion: reduce) {
     .hero { height: auto; }
-    .hero-sticky { position: static; height: auto; padding: 80px 16px; }
+    .hero-sticky { position: relative; }
     .sun { transform: none; }
 }
+
 
 /* ---------- Reportage ---------- */
 
