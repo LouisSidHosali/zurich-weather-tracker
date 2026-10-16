@@ -20,9 +20,8 @@ Im Hitzesommer 2026 leistete ich Zivildienst in einem Zürcher Altersheim und sa
 
 ## Screenshots
 
-| Desktop | Mobile |
-|---|---|
-| ![Desktop](ReadMe_Bilder/15-nachher-titel.png) |
+![Desktop](ReadMe_Bilder/15-nachher-titel.png)
+
 ## Marktstand (13.10.2026, Zürich)
 
 ![Plakat zum Datenfluss am Marktstand](ReadMe_Bilder/03-marktstand-datenfluss.jpg)
@@ -290,8 +289,6 @@ Blöd war auch, dass ich durch die Grippe so viel Zeit verlor. Dadurch kam ich i
 | Fehler in VS Code | Verbindung im Terminal klappt |
 |---|---|
 | ![SFTP-Fehlermeldung](ReadMe_Bilder/09-sftp-fehler.png) | ![SSH-Verbindung zu Hostpoint](ReadMe_Bilder/11-ssh-verbindung.png) |
-
-09-sftp-fehler.png) | ![SSH-Zugang bei Hostpoint] | ![SSH-Verbindung zu Hostpoint](ReadMe_Bilder/11-ssh-verbindung.png) |
 
 ![Vergleich von style.css in VS Code](ReadMe_Bilder/08-vscode-diff.png)
 ---
