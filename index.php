@@ -3,25 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Der Hitzkopf, der nicht abkühlen will – Zürich Weather Tracker</title>
+    <title>Wenn die Nacht keine Abkühlung bringt – Zürich Weather Tracker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=5">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
 <!-- Titel -->
-<header class="hero">
-    <div class="wrap">
-        <p class="eyebrow">Zürich Weather Tracker · Sommer 2026</p>
-        <h1>Der Hitzkopf, der nicht abkühlen will</h1>
-        <p class="lead">
-            Im August 2026 leistete ich Zivildienst in einem Altersheim in Zürich.
-            Eine Reportage über die Hitze – und darüber, was die Wetterdaten dazu sagen.
-        </p>
-        <p class="byline">Text, Daten und Umsetzung: Louis Hosali</p>
+<!-- Titel in einer Sonne: beim Scrollen geht die Sonne unter (script.js, updateSun) -->
+<header class="hero" id="hero">
+    <div class="hero-sticky">
+        <div class="sun">
+            <p class="eyebrow">Zürich Weather Tracker · Sommer 2026</p>
+            <h1>Wenn die Nacht keine Abkühlung bringt</h1>
+        </div>
+        <div class="hero-text">
+            <p class="lead">
+                Im August 2026 leistete ich Zivildienst in einem Altersheim in Zürich.
+                Eine Reportage über die Hitze – und darüber, was die Wetterdaten dazu sagen.
+            </p>
+            <p class="byline">Text, Daten und Umsetzung: Louis Hosali</p>
+        </div>
     </div>
 </header>
 
@@ -204,6 +209,30 @@
         </div>
     </section>
 
+    <!-- Schluss -->
+    <section class="chapter" id="ending">
+        <div class="text">
+            <p class="chapter-no">Schluss</p>
+            <h2>Was bleibt</h2>
+            <!-- ✍️ Diesen Abschnitt schreibst du selbst. Ideen:
+                 1. Zurück ins Altersheim: Wie war es, als es im September kühler wurde?
+                    Wie ging es Frau R., Herrn M., Herrn G.?
+                 2. Was die Daten zeigen: 21 Hitzetage, 12 Tropennächte, 3 Hitzewellen –
+                    die meisten davon in meinen Wochen im Zivildienst.
+                 3. Ausblick: Was heisst das für die nächsten Sommer? Was nimmst du mit?
+            -->
+            <p>
+                Absatz 1: Zurück ins Altersheim …
+            </p>
+            <p>
+                Absatz 2: Was die Zahlen zeigen …
+            </p>
+            <p class="question">
+                Schlusssatz …
+            </p>
+        </div>
+    </section>
+
     <!-- Live-Ansicht -->
     <section class="band band-live" id="live">
         <div class="wrap">
@@ -268,18 +297,7 @@
             <div>
                 <h3>Sammeln</h3>
                 <p>Ein Cronjob ruft jede Stunde <code>etl/load.php</code> auf. Das Skript holt die Daten von der
-                   API von Open-Meteo, bereinigt sie und speichert sie in einer MySQL-Datenbank.
-                   Bisher <strong id="m-runs">–</strong> Durchläufe, <strong id="m-total">–</strong> Stunden gespeichert
-                   (<span id="m-range">–</span>).</p>
-            </div>
-            <div>
-                <h3>Bereinigen</h3>
-                <p>Letzter Durchlauf (<span id="m-last">–</span>):
-                   <strong id="m-input">–</strong> Stunden geholt,
-                   <strong id="m-future">–</strong> Prognosestunden entfernt,
-                   <strong id="m-missing">–</strong> ohne Temperatur verworfen,
-                   <strong id="m-invalid">–</strong> unmögliche Werte auf null gesetzt,
-                   <strong id="m-inserted">–</strong> neu gespeichert.</p>
+                   API von Open-Meteo, bereinigt sie und speichert sie in einer MySQL-Datenbank.</p>
             </div>
             <div>
                 <h3>Grenzen</h3>
@@ -289,20 +307,36 @@
                    Die Seite zeigt die Hitze, nicht ihre Folgen.</p>
             </div>
         </div>
+
+        <h3 class="audit-title">Bisher gesammelt</h3>
+        <div class="audit">
+            <div class="audit-tile"><span class="audit-value" id="m-runs">–</span><span class="audit-label">Durchläufe</span></div>
+            <div class="audit-tile"><span class="audit-value" id="m-total">–</span><span class="audit-label">Stunden gespeichert</span></div>
+        </div>
+        <p class="hint" id="m-range">&nbsp;</p>
+
+        <h3 class="audit-title">Letzter Durchlauf <span id="m-last">–</span></h3>
+        <div class="audit">
+            <div class="audit-tile"><span class="audit-value" id="m-input">–</span><span class="audit-label">Stunden geholt</span></div>
+            <div class="audit-tile"><span class="audit-value" id="m-future">–</span><span class="audit-label">Prognosen entfernt</span></div>
+            <div class="audit-tile"><span class="audit-value" id="m-missing">–</span><span class="audit-label">ohne Temperatur verworfen</span></div>
+            <div class="audit-tile"><span class="audit-value" id="m-invalid">–</span><span class="audit-label">unmögliche Werte auf null</span></div>
+            <div class="audit-tile audit-new"><span class="audit-value" id="m-inserted">–</span><span class="audit-label">neu gespeichert</span></div>
+        </div>
     </section>
 
 </main>
 
 <footer>
     <div class="wrap">
+        <p>Louis Hosali, Einzelprojekt IM3, FHGR</p>
         <p>
             Daten: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0),
-            Standort Zürich (47.38 N, 8.54 E). Einzelprojekt im Modul Interaktive Medien 3, FHGR.
+            Standort Zürich (47.38 N, 8.54 E)
         </p>
-        <p>Ablauf: etl/extract.php → etl/transform.php → etl/load.php (stündlich per Cronjob) → MySQL → unload.php → Chart.js</p>
     </div>
 </footer>
 
-<script src="script.js?v=3"></script>
+<script src="script.js?v=5"></script>
 </body>
 </html>

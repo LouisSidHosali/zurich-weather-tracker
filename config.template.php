@@ -1,6 +1,4 @@
 <?php
-// Vorlage: als config.php kopieren und eigene Zugangsdaten eintragen.
-// config.php steht in .gitignore.
 
 $host     = 'KONTO.mysql.db.internal';
 $dbname   = 'KONTO_weather';

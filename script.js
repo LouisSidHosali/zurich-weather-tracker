@@ -281,10 +281,20 @@ function shortDate(text) {
 
 async function loadStory() {
     try {
-        const [heat, allDays] = await Promise.all([
-            loadJson(`${ENDPUNKT}?view=heat`),
-            loadJson(`${ENDPUNKT}?view=daily&days=365`),
-        ]);
+        let heat;
+        let allDays;
+        try {
+            [heat, allDays] = await Promise.all([
+                loadJson(`${ENDPUNKT}?view=heat`),
+                loadJson(`${ENDPUNKT}?view=daily&days=365`),
+            ]);
+        } catch (error) {
+            // Datenbank nicht erreichbar: dieselben Daten aus der Notfall-Kopie
+            console.warn('Geschichte: Endpunkt nicht erreichbar, nutze Fallback:', error.message);
+            const fallback = await loadJson(FALLBACK);
+            heat = fallback.heat;
+            allDays = fallback.daily;
+        }
         const days = heat.days.filter((day) => inStory(day.date));
         const waves = heat.heatwaves.filter((wave) => inStory(wave.from));
         const rainDays = allDays.filter((row) => inStory(row.date) && row.hours >= 20);
@@ -461,6 +471,22 @@ document.querySelectorAll('.range button').forEach((button) => {
         loadData();
     });
 });
+
+// ---------- Sonne im Titel ----------
+
+// Rechnet aus, wie weit man durch den Titelbereich gescrollt hat (0 bis 1),
+// und gibt den Wert als CSS-Variable --p weiter. Den Rest macht style.css.
+const hero = document.getElementById('hero');
+
+function updateSun() {
+    const scrollbar = hero.offsetHeight - window.innerHeight;   // so viel kann man im Titel scrollen
+    const gescrollt = -hero.getBoundingClientRect().top;        // so viel ist schon gescrollt
+    const p = Math.min(Math.max(gescrollt / scrollbar, 0), 1);  // auf 0 bis 1 begrenzen
+    hero.style.setProperty('--p', p.toFixed(3));
+}
+
+window.addEventListener('scroll', updateSun, { passive: true });
+updateSun();
 
 loadData();
 loadStatus();

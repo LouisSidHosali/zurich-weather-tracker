@@ -1,6 +1,4 @@
--- Einmal in phpMyAdmin (Reiter «SQL») ausführen.
 
--- Eine Zeile = eine Stunde Wetter in Zürich
 CREATE TABLE weather_hourly (
   id               INT AUTO_INCREMENT PRIMARY KEY,
   measured_at      DATETIME NOT NULL UNIQUE,
@@ -11,7 +9,6 @@ CREATE TABLE weather_hourly (
   created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Eine Zeile = ein Durchlauf von etl/load.php mit Audit
 CREATE TABLE etl_runs (
   id                  INT AUTO_INCREMENT PRIMARY KEY,
   run_at              DATETIME NOT NULL,

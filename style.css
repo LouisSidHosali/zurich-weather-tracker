@@ -44,9 +44,44 @@ a { color: inherit; }
 
 /* ---------- Titel ---------- */
 
+/*
+   Der Titel steht in einer Sonne. Die Variable --p geht beim Scrollen
+   von 0 (oben) bis 1 (Titel fertig gescrollt) und wird in script.js gesetzt.
+   Damit sinkt die Sonne, wird rot, und der Himmel wird dunkel (Nacht).
+*/
 .hero {
-    background: var(--sun);
-    padding: 96px 0 80px;
+    --p: 0;
+    height: 170vh;                          /* länger als der Bildschirm, damit man "durchscrollt" */
+    background: color-mix(in srgb, var(--ink) calc(var(--p) * 100%), var(--sand));
+}
+
+.hero-sticky {
+    position: sticky;                       /* bleibt stehen, während man durch .hero scrollt */
+    top: 0;
+    height: 100vh;
+    overflow: hidden;                       /* Sonne verschwindet unten wie hinter dem Horizont */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+}
+
+.sun {
+    --size: min(86vw, 560px, 62vh);         /* passt auf Handy und flache Laptop-Bildschirme */
+    width: var(--size);
+    aspect-ratio: 1;
+    flex-shrink: 0;                         /* nicht zusammendrücken, sonst wird es ein Oval */                        /* immer ein Kreis */
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--hot) calc(var(--p) * 100%), var(--sun));
+    box-shadow: 0 0 90px 30px rgba(255, 201, 60, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: calc(var(--size) * 0.12);      /* Abstand zum Rand, abhängig von der Sonnengrösse */
+    transform: translateY(calc(var(--p) * 55vh)) scale(calc(1 - var(--p) * 0.2));
 }
 
 .eyebrow, .chapter-no {
@@ -58,14 +93,27 @@ a { color: inherit; }
 }
 
 .hero h1 {
-    font-size: clamp(2.6rem, 7vw, 5rem);
+    font-size: clamp(1.7rem, min(6vw, 5.5vh), 3.4rem);
     font-weight: 800;
-    max-width: 16ch;
-    margin-bottom: 28px;
 }
 
-.lead { font-size: clamp(1.15rem, 2.2vw, 1.4rem); max-width: 40ch; margin: 0 0 24px; }
+/* Lead unter der Sonne, blendet beim Scrollen aus */
+.hero-text {
+    max-width: 560px;
+    margin-top: 32px;
+    text-align: center;
+    opacity: calc(1 - var(--p) * 4);
+}
+
+.lead { font-size: clamp(1.05rem, 2.2vw, 1.3rem); margin: 0 0 12px; }
 .byline { font-size: 0.9rem; margin: 0; }
+
+/* Wer weniger Bewegung eingestellt hat, sieht die Sonne ruhig */
+@media (prefers-reduced-motion: reduce) {
+    .hero { height: auto; }
+    .hero-sticky { position: static; height: auto; padding: 80px 16px; }
+    .sun { transform: none; }
+}
 
 /* ---------- Reportage ---------- */
 
@@ -277,10 +325,33 @@ footer {
 }
 footer p { margin: 0 0 8px; }
 
+/* Kacheln mit den Zahlen aus dem Audit */
+.audit-title { font-family: var(--sans); font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; margin: 40px 0 12px; }
+.audit-title span { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--muted); margin-left: 6px; }
+
+.audit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.audit-tile {
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+.audit-value { font-family: var(--serif); font-size: 1.9rem; font-weight: 800; line-height: 1.1; }
+.audit-label { font-size: 0.85rem; color: var(--muted); }
+.audit-new { background: var(--sun); }
+.audit-new .audit-label { color: var(--ink); }
+
 /* ---------- Kleine Bildschirme ---------- */
 
 @media (max-width: 600px) {
-    .hero { padding: 64px 0 56px; }
+    .hero-text { margin-top: 20px; }
     .reportage { padding-top: 56px; }
     .chapter, .band { padding: 64px 0; }
     .figure { margin-left: 12px; margin-right: 12px; padding: 20px 14px 16px; }

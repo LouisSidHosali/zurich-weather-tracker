@@ -1,5 +1,4 @@
 <?php
-// Transform: filtert, bereinigt und formt die Rohdaten (Regeln siehe TRANSFORM.md).
 
 $raw = include __DIR__ . '/extract.php';
 
@@ -19,7 +18,7 @@ $audit = [
     'output_rows'         => 0,
 ];
 
-// Zahl innerhalb der Grenzen, sonst null
+
 function cleanNumber($value, float $min, float $max, array &$audit): ?float
 {
     if ($value === null || !is_numeric($value)) {
@@ -40,7 +39,6 @@ $seen = [];
 for ($i = 0; $i < count($times); $i++) {
     $time = $times[$i];
 
-    // Prognosen (Zukunft) nicht speichern
     if ($time > $now) {
         $audit['future_hours']++;
         continue;

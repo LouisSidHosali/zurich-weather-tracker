@@ -108,9 +108,9 @@ $statement = $pdo->query(
             'temp_max_c'     => $max,
             'temp_min_c'     => $min,
             'temp_avg_c'     => $avg,
-            'heat_day'       => $max >= 30,   // Hitzetag: mindestens 30 °C
-            'tropical_night' => $min >= 20,   // Tropennacht: nie unter 20 °C
-            'hot_mean'       => $avg >= 25,   // Tagesmittel ab 25 °C
+            'heat_day'       => $max >= 30,   
+            'tropical_night' => $min >= 20,   
+            'hot_mean'       => $avg >= 25,   
         ];
     }
 
