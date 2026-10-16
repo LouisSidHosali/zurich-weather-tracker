@@ -1,5 +1,6 @@
 <?php
-// Schreibt die letzten 60 Tage nach data/fallback.json (Notfall-Kopie fürs Frontend).
+// Schreibt eine Notfall-Kopie nach data/fallback.json:
+// stündliche Werte der letzten 60 Tage, alle Tageswerte und die Hitze-Kennzahlen.
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -13,7 +14,8 @@ try {
     $data = [
         'status' => ['exported_at' => date('Y-m-d H:i:s')] + fetchStatus($pdo),
         'hourly' => fetchHourly($pdo, $since),
-        'daily'  => fetchDaily($pdo, $since),
+        'daily'  => fetchDaily($pdo, sinceDate(365)),
+        'heat'   => fetchHeat($pdo),
     ];
 
     file_put_contents(
@@ -25,6 +27,7 @@ try {
         'status' => 'ok',
         'hourly' => count($data['hourly']),
         'daily'  => count($data['daily']),
+        'heat'   => count($data['heat']['days']),
     ], JSON_PRETTY_PRINT);
 
 } catch (Throwable $error) {

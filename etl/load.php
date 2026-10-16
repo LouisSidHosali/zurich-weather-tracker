@@ -16,7 +16,6 @@ try {
     $pdo = new PDO($dsn, $username, $password, $options);
     $pdo->beginTransaction();
 
-    // measured_at ist UNIQUE: bestehende Stunden werden übersprungen
     $insertHour = $pdo->prepare(
         'INSERT IGNORE INTO weather_hourly
             (measured_at, temperature_c, precipitation_mm, humidity_pct, wind_speed_kmh)

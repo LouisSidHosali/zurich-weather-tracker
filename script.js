@@ -28,7 +28,7 @@ function sinceDate(numberOfDays) {
     return d;
 }
 
-// Fallback-Datei hat denselben Aufbau, hier filtert der Browser selbst
+
 async function loadFallback() {
     const data = await loadJson(FALLBACK);
     const since = sinceDate(days);
@@ -164,7 +164,6 @@ function render() {
     renderChartTitles();
 }
 
-// Diagrammtitel als Befund für den gewählten Zeitraum
 function renderChartTitles() {
     const fullDays = daily.filter((row) => row.hours >= 20);
     if (fullDays.length >= 2) {
@@ -256,7 +255,6 @@ function setStatus(text, isError = false) {
 
 // ---------- Geschichte (fester Zeitraum) ----------
 
-// Die Texte beziehen sich auf diesen Zeitraum, darum bleiben diese Grafiken fix
 const STORY_START = '2026-07-29';
 const STORY_END = '2026-09-30';
 
@@ -356,7 +354,7 @@ function temperatureClass(value) {
     return 't-cold';
 }
 
-// Ein Streifen pro Tag, gefärbt nach dem Höchstwert
+// Ein Streifen pro Tag, gefärbt nach Höchstwert
 function renderStrip(days) {
     const strip = document.querySelector('#heat-strip');
     strip.innerHTML = '';
@@ -474,14 +472,12 @@ document.querySelectorAll('.range button').forEach((button) => {
 
 // ---------- Sonne im Titel ----------
 
-// Rechnet aus, wie weit man durch den Titelbereich gescrollt hat (0 bis 1),
-// und gibt den Wert als CSS-Variable --p weiter. Den Rest macht style.css.
 const hero = document.getElementById('hero');
 
 function updateSun() {
-    const scrollbar = hero.offsetHeight - window.innerHeight;   // so viel kann man im Titel scrollen
-    const gescrollt = -hero.getBoundingClientRect().top;        // so viel ist schon gescrollt
-    const p = Math.min(Math.max(gescrollt / scrollbar, 0), 1);  // auf 0 bis 1 begrenzen
+    const scrollbar = hero.offsetHeight - window.innerHeight;  
+    const gescrollt = -hero.getBoundingClientRect().top;       
+    const p = Math.min(Math.max(gescrollt / scrollbar, 0), 1);  
     hero.style.setProperty('--p', p.toFixed(3));
 }
 

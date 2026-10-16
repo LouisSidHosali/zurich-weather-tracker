@@ -13,7 +13,6 @@
 <body>
 
 <!-- Titel -->
-<!-- Titel in einer Sonne: beim Scrollen geht die Sonne unter (script.js, updateSun) -->
 <header class="hero" id="hero">
     <div class="hero-sticky">
         <div class="sun">
@@ -214,21 +213,47 @@
         <div class="text">
             <p class="chapter-no">Schluss</p>
             <h2>Was bleibt</h2>
-            <!-- ✍️ Diesen Abschnitt schreibst du selbst. Ideen:
-                 1. Zurück ins Altersheim: Wie war es, als es im September kühler wurde?
-                    Wie ging es Frau R., Herrn M., Herrn G.?
-                 2. Was die Daten zeigen: 21 Hitzetage, 12 Tropennächte, 3 Hitzewellen –
-                    die meisten davon in meinen Wochen im Zivildienst.
-                 3. Ausblick: Was heisst das für die nächsten Sommer? Was nimmst du mit?
-            -->
             <p>
-                Absatz 1: Zurück ins Altersheim …
+                Gegen Ende meines Zivildiensts, am 20. August, regnete es zum ersten Mal wieder
+                richtig und etwas länger. Vor allem in der Nacht kühlte es ab: Die Temperatur fiel
+                von rund 25 auf 15 Grad. Als ich am nächsten Morgen aus dem Lift kam, merkte ich den
+                Unterschied sofort. Ich konnte besser atmen. Meine Chefin begrüsste mich erleichtert,
+                ihr Schritt war viel leichter. Am Zmorgentisch sah man auch den Bewohnerinnen und
+                Bewohnern die Erleichterung an. Das Wetter war das Thema des Tages. Frau R. machte ihr
+                Nachmittagsschläfchen endlich wieder in ihrem eigenen Zimmer, und Herr M. löste sein
+                Kreuzworträtsel in Ruhe, ohne alle fünf Minuten eine Pause zu brauchen.
             </p>
             <p>
-                Absatz 2: Was die Zahlen zeigen …
+                Die Erleichterung auf dem Stock zeigte, wie sehr die Hitze alle dort an ihre Grenzen
+                gebracht hatte. Ab wann Hitze gefährlich wird, lässt sich nicht an einer einzigen Zahl
+                festmachen. Auch MeteoSchweiz warnt nicht wegen eines einzelnen heissen Nachmittags,
+                sondern erst, wenn die Tagesmitteltemperatur an mindestens drei Tagen in Folge 25 Grad
+                erreicht. Meine Daten zeigen dasselbe Muster. Ein heisser Tag allein ist auszuhalten.
+                Schwierig wird es, wenn die Hitze bleibt: wenn auf einen Hitzetag eine Tropennacht folgt,
+                und dann noch eine und noch eine. Genau das geschah im August. 16 der 21 Hitzetage und
+                10 der 12 Tropennächte fielen in diesen einen Monat. Die längste Hitzewelle dauerte acht
+                Tage, vom 9. bis 16. August. Für Menschen, deren Körper sich nicht mehr so gut anpasst,
+                gab es in dieser Zeit kaum eine Pause.
+            </p>
+            <p>
+                Nach dem 20. August zählte mein Tracker noch einige Hitzetage, den letzten am
+                8. September, aber keine einzige Tropennacht mehr. Die Tage blieben heiss, doch die
+                Nächte brachten wieder Abkühlung.
+            </p>
+            <p>
+                Was die Hitze mit den Bewohnerinnen und Bewohnern genau gemacht hat, zeigen meine Daten
+                nicht. Sie messen die Temperatur, nicht die Müdigkeit, den Durst oder die Unruhe in den
+                Nächten. Das habe ich gesehen, nicht gemessen. Aber die Zahlen zeigen, wie lange dieser
+                Zustand dauerte. Und sie zeigen, dass die gefährlichste Zeit nicht der heisseste
+                Nachmittag war, sondern die Nacht danach.
+            </p>
+            <p>
+                Der Sommer 2026 war der heisseste seit Messbeginn. Es wird nicht der letzte dieser Art
+                bleiben. Mein Tracker sammelt weiter, jede Stunde ein neuer Wert. Vielleicht zeigt er im
+                nächsten Sommer schon früher, wann es wieder so weit ist.
             </p>
             <p class="question">
-                Schlusssatz …
+                Wenn die Nacht keine Abkühlung bringt, braucht es Menschen, die es tun.
             </p>
         </div>
     </section>

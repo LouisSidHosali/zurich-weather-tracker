@@ -34,7 +34,6 @@ h3 { font-size: 1.25rem; }
 
 a { color: inherit; }
 
-/* Inhaltsbreiten: schmal für Text, breiter für Grafiken */
 .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
 .text { max-width: 680px; margin: 0 auto; padding: 0 24px; }
 .text p { margin: 0 0 1.2em; }
@@ -44,33 +43,28 @@ a { color: inherit; }
 
 /* ---------- Titel ---------- */
 
-/*
-   Der Titel steht in einer Sonne. Die Variable --p geht beim Scrollen
-   von 0 (oben) bis 1 (Titel fertig gescrollt) und wird in script.js gesetzt.
-   Damit sinkt die Sonne, wird rot, und der Himmel wird dunkel (Nacht).
-*/
 .hero {
     --p: 0;
-    height: 170vh;                          /* länger als der Bildschirm, damit man "durchscrollt" */
+    height: 170vh;                          
     background: color-mix(in srgb, var(--ink) calc(var(--p) * 100%), var(--sand));
 }
 
 .hero-sticky {
-    position: sticky;                       /* bleibt stehen, während man durch .hero scrollt */
+    position: sticky;                       
     top: 0;
     height: 100vh;
-    overflow: hidden;                       /* Sonne verschwindet unten wie hinter dem Horizont */
+    overflow: hidden;                       
     display: flex;
-    align-items: center;                    /* Sonne genau in der Mitte vom Bildschirm */
+    align-items: center;                   
     justify-content: center;
     padding: 0 16px;
 }
 
 .sun {
-    --size: min(86vw, 560px, 62vh);         /* passt auf Handy und flache Laptop-Bildschirme */
+    --size: min(86vw, 560px, 62vh);         
     width: var(--size);
-    aspect-ratio: 1;                        /* immer ein Kreis */
-    flex-shrink: 0;                         /* nicht zusammendrücken, sonst wird es ein Oval */
+    aspect-ratio: 1;                        
+    flex-shrink: 0;                         
     border-radius: 50%;
     background: color-mix(in srgb, var(--hot) calc(var(--p) * 100%), var(--sun));
     box-shadow: 0 0 90px 30px rgba(255, 201, 60, 0.45);
@@ -79,9 +73,7 @@ a { color: inherit; }
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: calc(var(--size) * 0.12);      /* Abstand zum Rand, abhängig von der Sonnengrösse */
-    /* Die Sonne sinkt nur so weit, dass der Titel noch ganz sichtbar bleibt:
-       halbe Bildschirmhöhe minus ein Viertel der Sonnengrösse. */
+    padding: calc(var(--size) * 0.12);      
     transform: translateY(calc(var(--p) * (50vh - var(--size) * 0.25))) scale(calc(1 - var(--p) * 0.2));
 }
 
@@ -98,7 +90,7 @@ a { color: inherit; }
     font-weight: 800;
 }
 
-/* Einleitung unten am Bildschirm, blendet beim Scrollen aus */
+
 .hero-text {
     position: absolute;
     left: 16px;
@@ -113,7 +105,7 @@ a { color: inherit; }
 .lead { font-size: clamp(1rem, 2.2vw, 1.2rem); margin: 0 0 8px; }
 .byline { font-size: 0.85rem; margin: 0; }
 
-/* Wer weniger Bewegung eingestellt hat, sieht die Sonne ruhig */
+
 @media (prefers-reduced-motion: reduce) {
     .hero { height: auto; }
     .hero-sticky { position: relative; }
@@ -159,7 +151,6 @@ a { color: inherit; }
 
 .text-intro { max-width: 680px; font-size: 1.15rem; margin: 0 0 32px; }
 
-/* Grafik-Block mit grosser Zahl, etwas breiter als der Text */
 .figure {
     max-width: 960px;
     margin: 8px auto 48px;

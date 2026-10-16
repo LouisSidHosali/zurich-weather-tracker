@@ -19,7 +19,6 @@ function fetchJson(string $url): array
     return $data;
 }
 
-// 2 Tage zurück, damit verpasste Stunden nachgeholt werden
 $pastDays = $pastDays ?? 2;
 
 $url = 'https://api.open-meteo.com/v1/forecast?' . http_build_query([
